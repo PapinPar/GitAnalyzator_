@@ -1,0 +1,3 @@
+<resources>
+    <string name="auth">http://192.168.2.212:8080/api/v1/auth/</string>
+</resources>
