@@ -15,10 +15,10 @@ import retrofit2.http.Query;
  */
 public interface MyApi {
 
-    @POST("sign_up")
+    @POST("auth/sign_up")
     Call<UserRequest> signUp (@Body UserRequest user);
 
-    @POST("sign_in")
+    @POST("auth/sign_in")
     Call<UserRequest> signIn(@Body UserRequest user);
 
     @DELETE("sign_out")

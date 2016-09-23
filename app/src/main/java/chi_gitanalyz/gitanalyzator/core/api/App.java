@@ -7,7 +7,7 @@ import java.util.concurrent.Executor;
  */
 public interface App
 {
-
+    I_Net getNet();
 
     Executor getExecutor();
 
