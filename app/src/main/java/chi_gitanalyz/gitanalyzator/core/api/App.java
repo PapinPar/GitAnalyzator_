@@ -8,7 +8,7 @@ import java.util.concurrent.Executor;
 public interface App
 {
     I_Net getNet();
-
+    I_Db getDb();
     Executor getExecutor();
 
 }

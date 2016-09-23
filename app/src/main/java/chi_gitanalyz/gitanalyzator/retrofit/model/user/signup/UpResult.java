@@ -4,7 +4,7 @@ package chi_gitanalyz.gitanalyzator.retrofit.model.user.signup;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SignUpSuccess
+public class UpResult
 {
 
     @SerializedName("id")
@@ -14,15 +14,6 @@ public class SignUpSuccess
     @Expose
     private String email;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -31,4 +22,11 @@ public class SignUpSuccess
         this.email = email;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

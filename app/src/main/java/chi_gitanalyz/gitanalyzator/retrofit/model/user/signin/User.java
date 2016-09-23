@@ -15,6 +15,17 @@ public class User {
     @SerializedName("password")
     @Expose
     private String password;
+    @SerializedName("password_confirmation")
+    @Expose
+    private String password_confirmation;
+
+    public String getPassword_confirmation() {
+        return password_confirmation;
+    }
+
+    public void setPassword_confirmation(String password_confirmation) {
+        this.password_confirmation = password_confirmation;
+    }
 
     public String getEmail() {
         return email;

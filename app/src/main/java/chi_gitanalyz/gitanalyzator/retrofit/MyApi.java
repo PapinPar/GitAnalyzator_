@@ -1,6 +1,7 @@
 package chi_gitanalyz.gitanalyzator.retrofit;
 
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.UserRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.updateprofile.UpdateUserRequest;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -15,11 +16,11 @@ import retrofit2.http.Query;
  */
 public interface MyApi {
 
-    @POST("auth/sign_up")
-    Call<UserRequest> signUp (@Body UserRequest user);
+    @POST("sign_up")
+    Call<UpRequset> signUp (@Body UpRequset user);
 
-    @POST("auth/sign_in")
-    Call<UserRequest> signIn(@Body UserRequest user);
+    @POST("sign_in")
+    Call<InRequest> signIn(@Body InRequest user);
 
     @DELETE("sign_out")
     void sign_out(@Query("token") String token);
@@ -28,6 +29,6 @@ public interface MyApi {
     void validate_token(@Query("token") String token);
 
     @PUT("update_profile")
-    Call<UserRequest> updateProfile(@Body UpdateUserRequest user);
+    Call<InRequest> updateProfile(@Body UpdateUserRequest user);
 
 }

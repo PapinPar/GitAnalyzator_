@@ -16,6 +16,7 @@ public class ManagerMapper
     public static ContentValues parse(Manager user) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ManagerEntity.OBJECT_ID, user.getObjectId());
+        contentValues.put(ManagerEntity.TOKEN,user.getToken());
         contentValues.put(ManagerEntity.LOGIN, user.getLogin());
         contentValues.put(ManagerEntity.PASSWORD, user.getPassword());
         contentValues.put(ManagerEntity.EMAIL, user.getEmail());
@@ -28,6 +29,7 @@ public class ManagerMapper
         if(cursor.moveToFirst()) {
             Manager user = new Manager();
             user.setObjectId(cursor.getString(cursor.getColumnIndex(ManagerEntity.OBJECT_ID)));
+            user.setObjectId(cursor.getString(cursor.getColumnIndex(ManagerEntity.TOKEN)));
             user.setLogin(cursor.getString(cursor.getColumnIndex(ManagerEntity.LOGIN)));
             user.setPassword(cursor.getString(cursor.getColumnIndex(ManagerEntity.PASSWORD)));
             user.setEmail(cursor.getString(cursor.getColumnIndex(ManagerEntity.EMAIL)));

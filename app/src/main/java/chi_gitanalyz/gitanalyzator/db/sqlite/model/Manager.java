@@ -6,6 +6,7 @@ package chi_gitanalyz.gitanalyzator.db.sqlite.model;
 public class Manager
 {
     private String name;
+    private String token;
     private String login;
     private String objectId;
     private String email;
@@ -49,5 +50,13 @@ public class Manager
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

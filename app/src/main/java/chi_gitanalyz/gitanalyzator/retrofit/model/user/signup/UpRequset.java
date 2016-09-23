@@ -1,14 +1,15 @@
-package chi_gitanalyz.gitanalyzator.retrofit.model.user.signin;
+package chi_gitanalyz.gitanalyzator.retrofit.model.user.signup;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
+
 /**
- * Created by Papin on 22.09.2016.
+ * Created by Papin on 23.09.2016.
  */
 
-public class UserRequest extends SignInResult {
-
+public class UpRequset extends UpResult {
     @SerializedName("user")
     @Expose
     private User user;
@@ -20,6 +21,4 @@ public class UserRequest extends SignInResult {
     public void setUser(User user) {
         this.user = user;
     }
-
-
 }

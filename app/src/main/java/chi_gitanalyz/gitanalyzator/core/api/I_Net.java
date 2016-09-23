@@ -5,7 +5,8 @@ import android.support.annotation.NonNull;
 
 import chi_gitanalyz.gitanalyzator.core.observer.NetSubscriber;
 import chi_gitanalyz.gitanalyzator.core.observer.Subjcet;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.UserRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 
 /**
  * Created by Papin on 21.09.2016.
@@ -22,7 +23,8 @@ public interface I_Net extends Subjcet<NetSubscriber> {
     int Validate_Token = 104;
     int UPD_Profile = 105;
 
-    void signIN(@NonNull UserRequest user);
+    void signIN(@NonNull InRequest user);
+    void signUP(@NonNull UpRequset user);
 
 
 }
