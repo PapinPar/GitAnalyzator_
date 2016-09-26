@@ -1,4 +1,4 @@
 <resources>
     <string name="db.name">CApplication</string>
-    <integer name="db.version">1</integer>
+    <integer name="db.version">3</integer>
 </resources>

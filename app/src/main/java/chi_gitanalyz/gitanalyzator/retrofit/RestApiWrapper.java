@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Papin on 22.09.2016.
- */
+ * */
 
 public class RestApiWrapper {
 
@@ -54,12 +54,19 @@ public class RestApiWrapper {
         Call<InRequest> usersCall = api.signIn(user);
         Response response = usersCall.execute();
         return response;
+
     }
 
     public Response<UpRequset> signUp (UpRequset newUser) throws IOException{
 
         Call<UpRequset> newUserCall = api.signUp(newUser);
         Response response = newUserCall.execute();
+        return response;
+    }
+
+    public Response<String> signOut(String TOKEN) throws IOException{
+        Call<String> out = api.signOut(TOKEN);
+        Response response = out.execute();
         return response;
     }
 

@@ -25,6 +25,7 @@ public interface I_Net extends Subjcet<NetSubscriber> {
 
     void signIN(@NonNull InRequest user);
     void signUP(@NonNull UpRequset user);
+    void signOUT(@NonNull String token);
 
 
 }

@@ -29,7 +29,7 @@ public class ManagerMapper
         if(cursor.moveToFirst()) {
             Manager user = new Manager();
             user.setObjectId(cursor.getString(cursor.getColumnIndex(ManagerEntity.OBJECT_ID)));
-            user.setObjectId(cursor.getString(cursor.getColumnIndex(ManagerEntity.TOKEN)));
+            user.setToken(cursor.getString(cursor.getColumnIndex(ManagerEntity.TOKEN)));
             user.setLogin(cursor.getString(cursor.getColumnIndex(ManagerEntity.LOGIN)));
             user.setPassword(cursor.getString(cursor.getColumnIndex(ManagerEntity.PASSWORD)));
             user.setEmail(cursor.getString(cursor.getColumnIndex(ManagerEntity.EMAIL)));

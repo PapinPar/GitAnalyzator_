@@ -12,15 +12,16 @@ import chi_gitanalyz.gitanalyzator.db.sqlite.model.Manager;
 
 public interface I_Db extends Subjcet<DbSubscriber>
 {
-    @IntDef({USER_UPD, USER_LOAD})
+    @IntDef({USER_UPD, USER_LOAD,USER_DELETE})
     @interface DbEvent {
 
     }
 
-    int USER_UPD = 101;
-    int USER_LOAD = 102;
+    int USER_UPD = 201;
+    int USER_LOAD = 202;
+    int USER_DELETE = 203;
 
     void saveUser(Manager user);
-
+    void deleteUser();
     void loadUser();
 }

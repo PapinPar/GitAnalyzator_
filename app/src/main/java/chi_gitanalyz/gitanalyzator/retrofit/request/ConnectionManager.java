@@ -31,7 +31,6 @@ public class ConnectionManager implements I_Net {
     public ConnectionManager(Executor executor) {
         this.executor = executor;
         mHandler= new Handler(Looper.getMainLooper());
-
     }
 
     @Override
@@ -50,7 +49,6 @@ public class ConnectionManager implements I_Net {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-
                 }
             }
         });
@@ -73,6 +71,24 @@ public class ConnectionManager implements I_Net {
                     }
                 }catch (IOException e)
                 {e.printStackTrace();}
+            }
+        });
+    }
+
+    @Override
+    public void signOUT(@NonNull String token) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<String> response = RestApiWrapper.getInstance().signOut(token);
+                    if (response.isSuccessful()) {
+                        notifySuccessSubscribers(Sign_OUT,"OK");
+                    }else{
+                        String message = response.raw().message();
+                        notifyErrorSubscribers(Sign_OUT,message);
+                    }
+                }catch (IOException e){e.printStackTrace();}
             }
         });
     }

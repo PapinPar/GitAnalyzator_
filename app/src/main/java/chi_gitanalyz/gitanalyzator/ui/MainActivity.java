@@ -1,80 +1,108 @@
 package chi_gitanalyz.gitanalyzator.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 import chi_gitanalyz.gitanalyzator.R;
+import chi_gitanalyz.gitanalyzator.core.api.I_Db;
 import chi_gitanalyz.gitanalyzator.core.api.I_Net;
+import chi_gitanalyz.gitanalyzator.db.sqlite.model.Manager;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InResult;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpResult;
 
 
-public class MainActivity extends BaseActivity
-{
+public class MainActivity extends BaseActivity {
+
+    String TOKEN = "_NULL_";
+    String Email;
+    String Password;
+    MaterialEditText etEmail;
+    MaterialEditText etPassword;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        etEmail = (MaterialEditText) findViewById(R.id.email);
+        etPassword = (MaterialEditText) findViewById(R.id.password);
         findViewById(R.id.butSignIn).setOnClickListener((view) ->
-        {
-
-            User user = new User();
-            InRequest request = new InRequest();
-            user.setEmail("test@ui.com");
-            user.setPassword("password");
-            request.setUser(user);
-            app.getNet().signIN(request);
-
-        }
+                {
+                    Email = etEmail.getText().toString();
+                    Password = etPassword.getText().toString();
+                    User user = new User();
+                    InRequest request = new InRequest();
+                    user.setEmail(Email);
+                    user.setPassword(Password);
+                    request.setUser(user);
+                    app.getNet().signIN(request);
+                }
         );
 
         findViewById(R.id.butSignUp).setOnClickListener((view) ->
-        {
-            User NewUser = new User();
-            UpRequset requset = new UpRequset();
-            NewUser.setEmail("test@android.com");
-            NewUser.setPassword("password");
-            NewUser.setPassword_confirmation("password");
-            requset.setUser(NewUser);
-            app.getNet().signUP(requset);
-        }
+                {
+                    Intent intent = new Intent(this, SignUpActivity.class);
+                    startActivity(intent);
+                }
         );
+        findViewById(R.id.butSignOut).setOnClickListener((view) ->
+                {
+                    app.getDb().loadUser();
+                }
+        );
+    }
 
+    //      DB
+    @Override
+    public void onDbDataUpdated(@I_Db.DbEvent int eventId, Object dbObject) {
+        switch (eventId) {
+            case I_Db.USER_LOAD:
+                dbLoadUser((Manager) dbObject);
+                break;
+            case I_Db.USER_UPD:
+                dbSaveUser();
+                break;
+            case I_Db.USER_DELETE:
+                Log.d("DB", "user deleted");
+                break;
+        }
+    }
+
+    private void dbLoadUser(Manager manager) {
+        TOKEN = manager.getToken();
+        if (!TOKEN.equals("_NULL_")) {
+            app.getNet().signOUT(TOKEN);
+            app.getDb().deleteUser();
+        }
+        Log.d("DB", TOKEN);
+    }
+
+    private void dbSaveUser() {
+        Log.d("DB", "user saved");
+    }
+
+    @Override
+    public void onDbErrorError(@I_Db.DbEvent int tableId, Object error) {
     }
 
     @Override
     public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
-        switch (evetId)
-        {
+        switch (evetId) {
             case I_Net.Sign_IN:
                 InSuccess((InResult) NetObjects);
                 break;
-            case I_Net.Sign_UP:
-                UpSuccess((UpResult) NetObjects);
-                break;
-
         }
     }
 
-
-
     @Override
-    public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects)
-    {
-        switch (evetId)
-        {
+    public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
+        switch (evetId) {
             case I_Net.Sign_IN:
                 InError((String) NetObjects);
-                break;
-            case I_Net.Sign_UP:
-                UpError((String) NetObjects);
                 break;
         }
     }
@@ -82,20 +110,20 @@ public class MainActivity extends BaseActivity
     //      IN
     private void InSuccess(InResult response) {
         Log.d("TOKEN", "" + response.getToken());
-    }
-    private void InError(String netObjects) {
-        Log.d("Error", "" + netObjects);
-        Toast.makeText(this, ""+netObjects, Toast.LENGTH_SHORT).show();
+        Log.d("TOKEN", "" + response.getUserId());
+        Manager manager = new Manager();
+        manager.setToken(response.getToken());
+        app.getDb().saveUser(manager);
+        Intent intent = new Intent(this, ProjectsActivity.class);
+        startActivity(intent);
     }
 
-    //      UP
-    private void UpError(String netObjects) {
+    private void InError(String netObjects) {
         Log.d("Error", "" + netObjects);
-        Toast.makeText(this, ""+netObjects, Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(this, "" + netObjects, Toast.LENGTH_SHORT).show();
     }
-    private void UpSuccess(UpResult response)
-    {
-        Log.d("ID", "" + response.getId());
-    }
+
+
 }
 

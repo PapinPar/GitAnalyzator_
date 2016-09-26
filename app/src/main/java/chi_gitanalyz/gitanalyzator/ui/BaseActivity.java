@@ -3,6 +3,7 @@ package chi_gitanalyz.gitanalyzator.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import chi_gitanalyz.gitanalyzator.core.CApplication;
@@ -30,12 +31,13 @@ public class BaseActivity extends AppCompatActivity implements DbSubscriber,NetS
 
     @Override
     protected void onStart() {
+        Log.d("Subscribe","Subscribe+");
         super.onStart();
         if(!app.getNet().IsSubscribe(this))
             app.getNet().Subscribe(this);
 
         if (!app.getDb().IsSubscribe(this))
-            app.getNet().Subscribe(this);
+            app.getDb().Subscribe(this);
     }
 
     @Override

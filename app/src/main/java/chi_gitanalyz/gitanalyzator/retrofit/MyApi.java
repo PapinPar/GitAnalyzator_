@@ -14,16 +14,17 @@ import retrofit2.http.Query;
 /**
  * Created by Papin on 20.09.2016.
  */
+
 public interface MyApi {
 
     @POST("sign_up")
-    Call<UpRequset> signUp (@Body UpRequset user);
+    Call<UpRequset> signUp(@Body UpRequset user);
 
     @POST("sign_in")
     Call<InRequest> signIn(@Body InRequest user);
 
     @DELETE("sign_out")
-    void sign_out(@Query("token") String token);
+    Call<String> signOut(@Query("token") String token);
 
     @GET("validate_token")
     void validate_token(@Query("token") String token);

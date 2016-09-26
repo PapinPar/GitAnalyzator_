@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class SqliteManager implements I_Db
         executor.execute(()-> {
             long id = database.insert(ManagerEntity.TABLE_NAME, null, ManagerMapper.parse(user));
             if(id != -1){
+                Log.d("DB", "DataBaseVersion" + id);
                 handler.post(() -> notifySuccessSubscribers(I_Db.USER_UPD, user));
             }else {
                 DbError dbError = new DbError();
@@ -51,6 +53,17 @@ public class SqliteManager implements I_Db
                 handler.post(() -> notifyErrorSubscribers(I_Db.USER_UPD, dbError));
             }
             });
+    }
+
+    @Override
+    public void deleteUser()
+    {
+        executor.execute(()->
+        {
+            database.delete(ManagerEntity.TABLE_NAME, null, null);
+            handler.post(() -> notifySuccessSubscribers(I_Db.USER_DELETE, null));
+        }
+        );
     }
 
     @Override
@@ -90,15 +103,26 @@ public class SqliteManager implements I_Db
 
     @Override
     public void notifySuccessSubscribers(int eventId, Object object) {
-        for (DbSubscriber observer : observers ) {
-            observer.onDbDataUpdated(eventId,object);
-        }
+        for (DbSubscriber observer : observers )
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                observer.onDbDataUpdated(eventId,object);
+            }
+        });
+
+
     }
 
     @Override
     public void notifyErrorSubscribers(int eventId, Object object) {
         for(DbSubscriber observer : observers) {
-            observer.onDbErrorError(eventId,object);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    observer.onDbErrorError(eventId,object);
+                }
+            });
         }
     }
 
