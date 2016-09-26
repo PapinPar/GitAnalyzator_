@@ -8,7 +8,7 @@ public class Project {
 
     @SerializedName("id")
     @Expose
-    private String id;
+    private Integer id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -26,61 +26,131 @@ public class Project {
     private String webhookName;
     @SerializedName("gitlab_project_id")
     @Expose
-    private Integer gitlabProjectId;
+    private Object gitlabProjectId;
 
-    public String getId() {
+    /**
+     * 
+     * @return
+     *     The id
+     */
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    /**
+     * 
+     * @param id
+     *     The id
+     */
+    public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * 
+     * @return
+     *     The name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 
+     * @param name
+     *     The name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * 
+     * @return
+     *     The userId
+     */
     public Integer getUserId() {
         return userId;
     }
 
+    /**
+     * 
+     * @param userId
+     *     The user_id
+     */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
+    /**
+     * 
+     * @return
+     *     The secretToken
+     */
     public String getSecretToken() {
         return secretToken;
     }
 
+    /**
+     * 
+     * @param secretToken
+     *     The secret_token
+     */
     public void setSecretToken(String secretToken) {
         this.secretToken = secretToken;
     }
 
+    /**
+     * 
+     * @return
+     *     The ssh
+     */
     public String getSsh() {
         return ssh;
     }
 
+    /**
+     * 
+     * @param ssh
+     *     The ssh
+     */
     public void setSsh(String ssh) {
         this.ssh = ssh;
     }
 
+    /**
+     * 
+     * @return
+     *     The webhookName
+     */
     public String getWebhookName() {
         return webhookName;
     }
 
+    /**
+     * 
+     * @param webhookName
+     *     The webhook_name
+     */
     public void setWebhookName(String webhookName) {
         this.webhookName = webhookName;
     }
 
-    public Integer getGitlabProjectId() {
+    /**
+     * 
+     * @return
+     *     The gitlabProjectId
+     */
+    public Object getGitlabProjectId() {
         return gitlabProjectId;
     }
 
-    public void setGitlabProjectId(Integer gitlabProjectId) {
+    /**
+     * 
+     * @param gitlabProjectId
+     *     The gitlab_project_id
+     */
+    public void setGitlabProjectId(Object gitlabProjectId) {
         this.gitlabProjectId = gitlabProjectId;
     }
 

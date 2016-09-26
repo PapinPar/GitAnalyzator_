@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 import okhttp3.OkHttpClient;
@@ -16,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Papin on 22.09.2016.
- * */
+ */
 
 public class RestApiWrapper {
 
@@ -40,7 +41,7 @@ public class RestApiWrapper {
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.2.212/api/v1/auth/")
+                .baseUrl("http://192.168.2.212/api/v1/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -57,19 +58,25 @@ public class RestApiWrapper {
 
     }
 
-    public Response<UpRequset> signUp (UpRequset newUser) throws IOException{
+    public Response<UpRequset> signUp(UpRequset newUser) throws IOException {
 
         Call<UpRequset> newUserCall = api.signUp(newUser);
         Response response = newUserCall.execute();
         return response;
     }
 
-    public Response<String> signOut(String TOKEN) throws IOException{
+    public Response<String> signOut(String TOKEN) throws IOException {
         Call<String> out = api.signOut(TOKEN);
         Response response = out.execute();
         return response;
     }
 
+
+    public Response<Projects> projectList(String TOKEN) throws IOException {
+        Call<Projects> projectList = api.projectList(TOKEN);
+        Response<Projects> response = projectList.execute();
+        return response;
+    }
 
 
 }

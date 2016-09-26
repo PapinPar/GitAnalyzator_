@@ -14,7 +14,7 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 
 public interface I_Net extends Subjcet<NetSubscriber> {
 
-    @IntDef({Sign_UP,Sign_IN,Sign_OUT, Validate_Token,UPD_Profile})
+    @IntDef({Sign_UP,Sign_IN,Sign_OUT, Validate_Token,UPD_Profile,PROJECT_LIST})
     @interface NetEvent{}
 
     int Sign_UP = 101;
@@ -23,9 +23,15 @@ public interface I_Net extends Subjcet<NetSubscriber> {
     int Validate_Token = 104;
     int UPD_Profile = 105;
 
+    int PROJECT_LIST = 106;
+
+    //*************************************** AUTH ***************************************
     void signIN(@NonNull InRequest user);
     void signUP(@NonNull UpRequset user);
     void signOUT(@NonNull String token);
+
+    //*************************************** PROJECTS ***************************************
+    void projectList(@NonNull String token);
 
 
 }

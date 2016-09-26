@@ -18,7 +18,6 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
 
 public class MainActivity extends BaseActivity {
 
-    String TOKEN = "_NULL_";
     String Email;
     String Password;
     MaterialEditText etEmail;
@@ -49,20 +48,12 @@ public class MainActivity extends BaseActivity {
                     startActivity(intent);
                 }
         );
-        findViewById(R.id.butSignOut).setOnClickListener((view) ->
-                {
-                    app.getDb().loadUser();
-                }
-        );
     }
 
     //      DB
     @Override
     public void onDbDataUpdated(@I_Db.DbEvent int eventId, Object dbObject) {
         switch (eventId) {
-            case I_Db.USER_LOAD:
-                dbLoadUser((Manager) dbObject);
-                break;
             case I_Db.USER_UPD:
                 dbSaveUser();
                 break;
@@ -72,14 +63,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void dbLoadUser(Manager manager) {
-        TOKEN = manager.getToken();
-        if (!TOKEN.equals("_NULL_")) {
-            app.getNet().signOUT(TOKEN);
-            app.getDb().deleteUser();
-        }
-        Log.d("DB", TOKEN);
-    }
 
     private void dbSaveUser() {
         Log.d("DB", "user saved");
@@ -115,6 +98,7 @@ public class MainActivity extends BaseActivity {
         manager.setToken(response.getToken());
         app.getDb().saveUser(manager);
         Intent intent = new Intent(this, ProjectsActivity.class);
+        intent.putExtra("TOKEN_ID", response.getToken());
         startActivity(intent);
     }
 
