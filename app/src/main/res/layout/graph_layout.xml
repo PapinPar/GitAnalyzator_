@@ -3,10 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_height="match_parent"
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:id="@+id/rec_view453"
-        android:background="@android:color/darker_gray" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

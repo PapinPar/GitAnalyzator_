@@ -13,6 +13,7 @@ import chi_gitanalyz.gitanalyzator.core.api.I_Net;
 import chi_gitanalyz.gitanalyzator.core.observer.NetSubscriber;
 import chi_gitanalyz.gitanalyzator.retrofit.RestApiWrapper;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.ProjectsID;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InResult;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
@@ -104,6 +105,24 @@ public class ConnectionManager implements I_Net {
                     if(response.isSuccessful()){
                         Projects result = response.body();
                         notifySuccessSubscribers(PROJECT_LIST,result);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void projectAnalyz(@NonNull String id,String projectsID) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<ProjectsID> response = RestApiWrapper.getInstance().projectAnalyz(id,projectsID);
+                    if(response.isSuccessful()){
+                        ProjectsID result = response.body();
+                        notifySuccessSubscribers(PROJECT_ANALYZ,result);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
