@@ -1,4 +1,4 @@
-package chi_gitanalyz.gitanalyzator.ui.adapter;
+package chi_gitanalyz.gitanalyzator.ui.adapter.ad_project;
 
 /**
  * Created by Papin on 27.09.2016.

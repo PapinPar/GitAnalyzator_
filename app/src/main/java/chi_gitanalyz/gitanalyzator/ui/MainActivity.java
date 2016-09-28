@@ -14,6 +14,7 @@ import chi_gitanalyz.gitanalyzator.db.sqlite.model.Manager;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InResult;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
+import chi_gitanalyz.gitanalyzator.ui.project.ProjectsActivity;
 
 
 public class MainActivity extends BaseActivity {

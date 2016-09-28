@@ -1,4 +1,4 @@
-package chi_gitanalyz.gitanalyzator.ui.adapter;
+package chi_gitanalyz.gitanalyzator.ui.adapter.ad_project;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +14,7 @@ import chi_gitanalyz.gitanalyzator.R;
 /**
  * Created by Papin on 27.09.2016.
  */
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
+public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.PersonViewHolder> {
 
     public interface NameOnClickListener{
         void getPosition(int position);
@@ -27,14 +27,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         PersonViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            personName = (TextView)itemView.findViewById(R.id.project_name);
+            personName = (TextView)itemView.findViewById(R.id.developer_name);
         }
     }
 
     List<ProjectNames> persons;
     NameOnClickListener click;
 
-    public RVAdapter(List<ProjectNames> persons,NameOnClickListener click){
+    public ProjectAdapter(List<ProjectNames> persons, NameOnClickListener click){
         this.persons = persons;
         this.click =  click;
     }
@@ -46,7 +46,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
     @Override
     public PersonViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_project_view, viewGroup, false);
         PersonViewHolder pvh = new PersonViewHolder(v);
         return pvh;
     }

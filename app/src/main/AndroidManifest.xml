@@ -21,8 +21,9 @@
         </activity>
 
         <activity android:name=".ui.SignUpActivity"></activity>
-        <activity android:name=".ui.ProjectsActivity"></activity>
-        <activity android:name=".ui.GraphActivity"></activity>
+        <activity android:name=".ui.project.ProjectsActivity"></activity>
+        <activity android:name=".ui.project.GraphProjectActivity"></activity>
+        <activity android:name=".ui.developer.DevelopersActivity"></activity>
     </application>
 
 </manifest>

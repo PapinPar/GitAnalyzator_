@@ -4,40 +4,31 @@ package chi_gitanalyz.gitanalyzator.retrofit.model.developers;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Developers {
 
-    @SerializedName("id")
+    @SerializedName("developers")
     @Expose
-    private Integer id;
-    @SerializedName("name")
-    @Expose
-    private String name;
-    @SerializedName("email")
-    @Expose
-    private String email;
+    private List<Developer> developers = new ArrayList<Developer>();
 
-    public Integer getId() {
-        return id;
+    /**
+     * 
+     * @return
+     *     The developers
+     */
+    public List<Developer> getDevelopers() {
+        return developers;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    /**
+     * 
+     * @param developers
+     *     The developers
+     */
+    public void setDevelopers(List<Developer> developers) {
+        this.developers = developers;
     }
 
 }

@@ -1,4 +1,4 @@
-package chi_gitanalyz.gitanalyzator.ui;
+package chi_gitanalyz.gitanalyzator.ui.project;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,21 +17,24 @@ import chi_gitanalyz.gitanalyzator.core.api.I_Db;
 import chi_gitanalyz.gitanalyzator.core.api.I_Net;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Project;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
-import chi_gitanalyz.gitanalyzator.ui.adapter.ProjectNames;
-import chi_gitanalyz.gitanalyzator.ui.adapter.RVAdapter;
+import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
+import chi_gitanalyz.gitanalyzator.ui.adapter.ad_project.ProjectAdapter;
+import chi_gitanalyz.gitanalyzator.ui.adapter.ad_project.ProjectNames;
+import chi_gitanalyz.gitanalyzator.ui.developer.DevelopersActivity;
 
 /**
  * Created by Papin on 26.09.2016.
  */
 
-public class ProjectsActivity extends BaseActivity implements RVAdapter.NameOnClickListener {
+public class ProjectsActivity extends BaseActivity implements ProjectAdapter.NameOnClickListener {
 
     String TOKEN = "_NULL_";
     String TOKEN_ID;
     private List<ProjectNames> projectNames= new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<Project> s;
+    List<Project> projectList;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +47,14 @@ public class ProjectsActivity extends BaseActivity implements RVAdapter.NameOnCl
         recyclerView=(RecyclerView)findViewById(R.id.rec_view453);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
+
+        findViewById(R.id.but_all_dev).setOnClickListener((view) ->
+        {
+            Intent startDevActivity = new Intent(this, DevelopersActivity.class);
+            startDevActivity.putExtra("TOKEN", TOKEN_ID);
+            startActivity(startDevActivity);
+        }
+        );
 
         loadProjects();
     }
@@ -87,12 +98,10 @@ public class ProjectsActivity extends BaseActivity implements RVAdapter.NameOnCl
     }
 
     private void fillList(Projects projectsList) {
-        s = projectsList.getProjects();
-        Log.d("Project", "Project" + s);
-        Log.d("Project", "Project SSH" + s.get(1).getSsh());
-        for(int i =0;i<s.size();i++)
-            projectNames.add(new ProjectNames(s.get(i).getName()));
-        RVAdapter adapter = new RVAdapter(projectNames,this);
+        projectList = projectsList.getProjects();
+        for(int i =0;i<projectList.size();i++)
+            projectNames.add(new ProjectNames(projectList.get(i).getName()));
+        ProjectAdapter adapter = new ProjectAdapter(projectNames,this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -118,8 +127,8 @@ public class ProjectsActivity extends BaseActivity implements RVAdapter.NameOnCl
 
     @Override
     public void getPosition(int position) {
-        String id = String.valueOf(s.get(position).getId());
-        Intent startActivity_Graph = new Intent(this, GraphActivity.class);
+        String id = String.valueOf(projectList.get(position).getId());
+        Intent startActivity_Graph = new Intent(this, GraphProjectActivity.class);
         startActivity_Graph.putExtra("_TOKEN_", TOKEN_ID);
         startActivity_Graph.putExtra("ID_PROJECT", id);
         startActivity(startActivity_Graph);
