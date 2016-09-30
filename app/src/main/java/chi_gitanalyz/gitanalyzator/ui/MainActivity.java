@@ -100,6 +100,7 @@ public class MainActivity extends BaseActivity {
         app.getDb().saveUser(manager);
         Intent intent = new Intent(this, ProjectsActivity.class);
         intent.putExtra("TOKEN_ID", response.getToken());
+        intent.putExtra("MANAGER_ID", response.getUserId().toString());
         startActivity(intent);
     }
 

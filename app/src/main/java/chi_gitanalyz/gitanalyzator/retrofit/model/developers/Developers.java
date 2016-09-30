@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.Developer;
+
 public class Developers {
 
     @SerializedName("developers")

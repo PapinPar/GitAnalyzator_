@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_shadow_end_color">
+
+        <Spinner
+            android:id="@+id/spinBranch_dev"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="8dp" />
+
+        <Spinner
+            android:id="@+id/spinFilter_dev"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp" />
+    </LinearLayout>
+
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/chart_dev"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spin_branch_dev"
+            android:layout_weight="1"
+            android:layout_marginRight="8dp"
+            android:visibility="gone"></Spinner>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinDev_dev"
+            android:gravity="center_vertical"
+            android:scrollbarSize="12dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</LinearLayout>

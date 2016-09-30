@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ import chi_gitanalyz.gitanalyzator.core.api.I_Net;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Project;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
 import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
+import chi_gitanalyz.gitanalyzator.ui.CreateProjectActivity;
+import chi_gitanalyz.gitanalyzator.ui.FragmentDialog;
 import chi_gitanalyz.gitanalyzator.ui.adapter.ad_project.ProjectAdapter;
 import chi_gitanalyz.gitanalyzator.ui.adapter.ad_project.ProjectNames;
 import chi_gitanalyz.gitanalyzator.ui.developer.DevelopersActivity;
@@ -26,15 +29,17 @@ import chi_gitanalyz.gitanalyzator.ui.developer.DevelopersActivity;
  * Created by Papin on 26.09.2016.
  */
 
-public class ProjectsActivity extends BaseActivity implements ProjectAdapter.NameOnClickListener {
+public class ProjectsActivity extends BaseActivity implements ProjectAdapter.NameOnClickListener,FragmentDialog.GetOnspinListner {
 
     String TOKEN = "_NULL_";
     String TOKEN_ID;
-    private List<ProjectNames> projectNames= new ArrayList<>();
+    String MANAGER_ID;
+    private List<ProjectNames> projectNames = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     List<Project> projectList;
-
+    LinearLayout view;
+    FragmentDialog fragmentDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,22 +48,25 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
         Intent intent = getIntent();
         TOKEN_ID = intent.getStringExtra("TOKEN_ID");
+        MANAGER_ID = intent.getStringExtra("MANAGER_ID");
 
-        recyclerView=(RecyclerView)findViewById(R.id.rec_view453);
+        recyclerView = (RecyclerView) findViewById(R.id.rec_view453);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-
+        fragmentDialog = new FragmentDialog();
         findViewById(R.id.but_all_dev).setOnClickListener((view) ->
-        {
-            Intent startDevActivity = new Intent(this, DevelopersActivity.class);
-            startDevActivity.putExtra("TOKEN", TOKEN_ID);
-            startActivity(startDevActivity);
-        }
+                {
+                    Intent startDevActivity = new Intent(this, DevelopersActivity.class);
+                    startDevActivity.putExtra("TOKEN", TOKEN_ID);
+                    startActivity(startDevActivity);
+                }
         );
+
+
+
 
         loadProjects();
     }
-
 
 
     private void loadProjects() {
@@ -92,16 +100,17 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
                 fillList((Projects) NetObjects);
                 break;
             case I_Net.PROJECT_ANALYZ:
-                Log.d("ANALYZ","ANALYZ" + NetObjects);
+                Log.d("ANALYZ", "ANALYZ" + NetObjects);
         }
 
     }
 
     private void fillList(Projects projectsList) {
-        projectList = projectsList.getProjects();
-        for(int i =0;i<projectList.size();i++)
+        fragmentDialog.getListner(this,projectsList);
+       projectList = projectsList.getProjects();
+        for (int i = 0; i < projectList.size(); i++)
             projectNames.add(new ProjectNames(projectList.get(i).getName()));
-        ProjectAdapter adapter = new ProjectAdapter(projectNames,this);
+        ProjectAdapter adapter = new ProjectAdapter(projectNames, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -114,6 +123,12 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         switch (item.getItemId()) {
             case R.id.item1:
                 deleteUser();
+                break;
+            case R.id.item2:
+                Intent intent = new Intent(this, CreateProjectActivity.class);
+                intent.putExtra("USER_ID", MANAGER_ID);
+                intent.putExtra("TOKEN", TOKEN_ID);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -132,6 +147,12 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         startActivity_Graph.putExtra("_TOKEN_", TOKEN_ID);
         startActivity_Graph.putExtra("ID_PROJECT", id);
         startActivity(startActivity_Graph);
+
+    }
+
+
+    @Override
+    public void getList(String project, String dev, String branch, String filter) {
 
     }
 }

@@ -1,6 +1,8 @@
 package chi_gitanalyz.gitanalyzator.retrofit;
 
+import chi_gitanalyz.gitanalyzator.retrofit.model.developers.CurrentDev;
 import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.ProjectsID;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
@@ -47,5 +49,11 @@ public interface MyApi {
     //*********************** DEVELOPER *************************
     @GET("developers")
     Call<Developers> getDevelopers(@Query("token") String token);
+
+    @GET("developers/{id}")
+    Call<CurrentDev> getCurrDeveloper(@Path("id") String id, @Query("token") String token);
+
+    @POST("projects")
+    Call<CreateProject> createProject(@Body CreateProject project, @Query("token") String token);
 
 }

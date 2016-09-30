@@ -98,6 +98,9 @@ public class GraphProjectActivity extends BaseActivity {
 
     private void fillSpiner(ProjectsID netObjects) {
 
+        filter.clear();
+        branch.clear();
+
         filter.add("Score");
         filter.add("Duplications");
         filter.add("Smells");
@@ -184,7 +187,7 @@ public class GraphProjectActivity extends BaseActivity {
         else {
             for (int i = 0; i < 1; i++) {
                 values = new ArrayList<PointValue>();
-                for (int j = 0; j <=netObjects.getBranches().get(branch_id).getCommits().size()-5; j++) {
+                for (int j = 0; j <=netObjects.getBranches().get(branch_id).getCommits().size()-1; j++) {
                     if(filter_id==0)
                         values.add(new PointValue(j, netObjects.getBranches().get(branch_id).getCommits().get(j).getScore()));
                     if(filter_id==1)

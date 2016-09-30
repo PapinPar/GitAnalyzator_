@@ -9,7 +9,7 @@ import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Project;
 
-public class Developer {
+public class CurrentDev {
 
     @SerializedName("id")
     @Expose

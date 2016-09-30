@@ -12,7 +12,9 @@ import java.util.concurrent.Executor;
 import chi_gitanalyz.gitanalyzator.core.api.I_Net;
 import chi_gitanalyz.gitanalyzator.core.observer.NetSubscriber;
 import chi_gitanalyz.gitanalyzator.retrofit.RestApiWrapper;
+import chi_gitanalyz.gitanalyzator.retrofit.model.developers.CurrentDev;
 import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.ProjectsID;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
@@ -134,6 +136,26 @@ public class ConnectionManager implements I_Net {
     }
 
     @Override
+    public void createProject(@NonNull CreateProject project, @NonNull String token) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Response<CreateProject> response = RestApiWrapper.getInstance().createProject(project,token);
+                    if (response.isSuccessful())
+                    {
+                        notifySuccessSubscribers(CREATE_PROJECT,response);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    @Override
     public void getAllDev(@NonNull String token) {
         executor.execute(new Runnable() {
             @Override
@@ -143,6 +165,24 @@ public class ConnectionManager implements I_Net {
                     if (response.isSuccessful()) {
                        Developers result = response.body();
                         notifySuccessSubscribers(ALL_DEV,result);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getCuurDev(@NonNull String id, @NonNull String token) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<CurrentDev> response = RestApiWrapper.getInstance().getCurrDev(id, token);
+                    if(response.isSuccessful()){
+                        CurrentDev result = response.body();
+                        notifySuccessSubscribers(CURR_DEV, result);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

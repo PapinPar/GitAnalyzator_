@@ -24,6 +24,8 @@
         <activity android:name=".ui.project.ProjectsActivity"></activity>
         <activity android:name=".ui.project.GraphProjectActivity"></activity>
         <activity android:name=".ui.developer.DevelopersActivity"></activity>
+        <activity android:name=".ui.developer.GraphDeveloperActivity"></activity>
+        <activity android:name=".ui.CreateProjectActivity"></activity>
     </application>
 
 </manifest>

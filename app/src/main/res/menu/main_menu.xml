@@ -3,4 +3,8 @@
     xmlns:android="http://schemas.android.com/tools">
     <item  android:id="@+id/item1"
         android:title="Sign Out" />
+    <item
+        android:id="@+id/item2"
+        android:title="Create New Project"
+       />
 </menu>

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import chi_gitanalyz.gitanalyzator.core.observer.NetSubscriber;
 import chi_gitanalyz.gitanalyzator.core.observer.Subjcet;
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 
@@ -14,7 +15,7 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 
 public interface I_Net extends Subjcet<NetSubscriber> {
 
-    @IntDef({Sign_UP,Sign_IN,Sign_OUT, Validate_Token,UPD_Profile,PROJECT_LIST,PROJECT_ANALYZ,ALL_DEV})
+    @IntDef({Sign_UP,Sign_IN,Sign_OUT, Validate_Token,UPD_Profile,PROJECT_LIST,PROJECT_ANALYZ,ALL_DEV,CURR_DEV,CREATE_PROJECT})
     @interface NetEvent{}
 
     int Sign_UP = 101;
@@ -27,6 +28,9 @@ public interface I_Net extends Subjcet<NetSubscriber> {
     int PROJECT_ANALYZ = 107;
 
     int ALL_DEV = 108;
+    int CURR_DEV = 109;
+
+    int CREATE_PROJECT = 200;
 
     //*************************************** AUTH ***************************************
     void signIN(@NonNull InRequest user);
@@ -35,10 +39,13 @@ public interface I_Net extends Subjcet<NetSubscriber> {
 
     //*************************************** PROJECTS ***************************************
     void projectList(@NonNull String token);
-    void projectAnalyz(@NonNull String id, String token);
+    void projectAnalyz(@NonNull String id, @NonNull String token);
+    void createProject(@NonNull CreateProject project, @NonNull String token);
 
     //*************************************** DEVELOPERS ***************************************
     void getAllDev(@NonNull String token);
+    void getCuurDev(@NonNull String id, @NonNull String token);
+
 
 
 }

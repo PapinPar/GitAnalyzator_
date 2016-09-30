@@ -11,8 +11,8 @@ import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.R;
 import chi_gitanalyz.gitanalyzator.core.api.I_Net;
-import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developer;
 import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.Developer;
 import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
 import chi_gitanalyz.gitanalyzator.ui.adapter.ad_dev.DevAdapter;
 import chi_gitanalyz.gitanalyzator.ui.adapter.ad_dev.DevelopersInfo;
@@ -21,7 +21,7 @@ import chi_gitanalyz.gitanalyzator.ui.adapter.ad_dev.DevelopersInfo;
  * Created by Papin on 28.09.2016.
  */
 
-public class DevelopersActivity extends BaseActivity
+public class DevelopersActivity extends BaseActivity implements DevAdapter.DevClickListner
 {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -43,7 +43,6 @@ public class DevelopersActivity extends BaseActivity
         recyclerView.setLayoutManager(mLayoutManager);
 
         loadDevelopers();
-
     }
 
     private void loadDevelopers() {
@@ -59,10 +58,20 @@ public class DevelopersActivity extends BaseActivity
             DevelopersInfoList.add(new DevelopersInfo(devList.get(i).getCommitsCount(), devList.get(i).getEmail(), devList.get(i).getName(), projects));
             projects = "";
         }
-        DevAdapter adapter = new DevAdapter(DevelopersInfoList);
+        DevAdapter adapter = new DevAdapter(DevelopersInfoList,this);
         recyclerView.setAdapter(adapter);
     }
 
+
+    @Override
+    public void getPosition(int position) {
+        String id = String.valueOf(devList.get(position).getId());
+        Intent startGraphDevActivity = new Intent(this, GraphDeveloperActivity.class);
+        startGraphDevActivity.putExtra("TOKEN_ID", TOKEN_ID);
+        startGraphDevActivity.putExtra("DEV_ID", id);
+        startActivity(startGraphDevActivity);
+
+    }
 
     @Override
     public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
