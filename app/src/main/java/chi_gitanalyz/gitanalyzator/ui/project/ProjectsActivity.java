@@ -24,12 +24,13 @@ import chi_gitanalyz.gitanalyzator.ui.FragmentDialog;
 import chi_gitanalyz.gitanalyzator.ui.adapter.ad_project.ProjectAdapter;
 import chi_gitanalyz.gitanalyzator.ui.adapter.ad_project.ProjectNames;
 import chi_gitanalyz.gitanalyzator.ui.developer.DevelopersActivity;
+import dmax.dialog.SpotsDialog;
 
 /**
  * Created by Papin on 26.09.2016.
  */
 
-public class ProjectsActivity extends BaseActivity implements ProjectAdapter.NameOnClickListener,FragmentDialog.GetOnspinListner {
+public class ProjectsActivity extends BaseActivity implements ProjectAdapter.NameOnClickListener{
 
     String TOKEN = "_NULL_";
     String TOKEN_ID;
@@ -41,15 +42,19 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
     LinearLayout view;
     FragmentDialog fragmentDialog;
 
+    android.app.AlertDialog dialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.project_layout);
 
+        dialog = new SpotsDialog(this);
+        dialog.show();
+
         Intent intent = getIntent();
         TOKEN_ID = intent.getStringExtra("TOKEN_ID");
         MANAGER_ID = intent.getStringExtra("MANAGER_ID");
-
         recyclerView = (RecyclerView) findViewById(R.id.rec_view453);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -61,8 +66,6 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
                     startActivity(startDevActivity);
                 }
         );
-
-
 
 
         loadProjects();
@@ -81,10 +84,8 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
 
     private void deleteUser() {
-        if (!TOKEN.equals("_NULL_")) {
-            app.getNet().signOUT(TOKEN);
+            app.getNet().signOUT(TOKEN_ID);
             app.getDb().deleteUser();
-        }
         Log.d("DB", TOKEN);
     }
 
@@ -106,12 +107,13 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
     }
 
     private void fillList(Projects projectsList) {
-        fragmentDialog.getListner(this,projectsList);
-       projectList = projectsList.getProjects();
+
+        projectList = projectsList.getProjects();
         for (int i = 0; i < projectList.size(); i++)
             projectNames.add(new ProjectNames(projectList.get(i).getName()));
         ProjectAdapter adapter = new ProjectAdapter(projectNames, this);
         recyclerView.setAdapter(adapter);
+        dialog.dismiss();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,9 +152,4 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
     }
 
-
-    @Override
-    public void getList(String project, String dev, String branch, String filter) {
-
-    }
 }

@@ -21,7 +21,7 @@ import chi_gitanalyz.gitanalyzator.ui.adapter.ad_dev.DevelopersInfo;
  * Created by Papin on 28.09.2016.
  */
 
-public class DevelopersActivity extends BaseActivity implements DevAdapter.DevClickListner
+public class DevelopersActivity extends BaseActivity
 {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -58,19 +58,8 @@ public class DevelopersActivity extends BaseActivity implements DevAdapter.DevCl
             DevelopersInfoList.add(new DevelopersInfo(devList.get(i).getCommitsCount(), devList.get(i).getEmail(), devList.get(i).getName(), projects));
             projects = "";
         }
-        DevAdapter adapter = new DevAdapter(DevelopersInfoList,this);
+        DevAdapter adapter = new DevAdapter(DevelopersInfoList);
         recyclerView.setAdapter(adapter);
-    }
-
-
-    @Override
-    public void getPosition(int position) {
-        String id = String.valueOf(devList.get(position).getId());
-        Intent startGraphDevActivity = new Intent(this, GraphDeveloperActivity.class);
-        startGraphDevActivity.putExtra("TOKEN_ID", TOKEN_ID);
-        startGraphDevActivity.putExtra("DEV_ID", id);
-        startActivity(startGraphDevActivity);
-
     }
 
     @Override

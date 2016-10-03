@@ -77,4 +77,5 @@ public class SignUpActivity extends BaseActivity {
         Log.d("Error", "" + netObjects);
         Toast.makeText(this, "" + netObjects, Toast.LENGTH_SHORT).show();
     }
+
 }

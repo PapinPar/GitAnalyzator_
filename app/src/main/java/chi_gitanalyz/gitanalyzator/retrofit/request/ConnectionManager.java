@@ -16,9 +16,11 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.developers.CurrentDev;
 import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.home.Home;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.ProjectsID;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InResult;
+import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpResult;
 import retrofit2.Response;
@@ -92,6 +94,64 @@ public class ConnectionManager implements I_Net {
                         String message = response.raw().message();
                         notifyErrorSubscribers(Sign_OUT, message);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void validateToken(@NonNull String token) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<User> response = RestApiWrapper.getInstance().validateToken(token);
+                    if(response.isSuccessful())
+                    {
+                        User result = response.body();
+                        notifySuccessSubscribers(Validate_Token,result);
+                    }else {
+                        String message = response.raw().message();
+                        notifyErrorSubscribers(Validate_Token, message);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public void projectHome(@NonNull String id, @NonNull String token) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<Home> response = RestApiWrapper.getInstance().getHome(id, token);
+                    if(response.isSuccessful()){
+                        Home resp = response.body();
+                        notifySuccessSubscribers(HOME_PROJECT,resp);}
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void projectFilter(@NonNull String id, @NonNull String token, @NonNull Integer branch, @NonNull Integer dev) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<ProjectsID> response = RestApiWrapper.getInstance().projectFilter(id, token, branch, dev);
+                    if(response.isSuccessful()){
+                        ProjectsID result = response.body();
+                        notifySuccessSubscribers(FILT_PROJECT,result);}
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

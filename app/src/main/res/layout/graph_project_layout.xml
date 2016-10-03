@@ -4,27 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cardview_shadow_end_color">
-
-        <Spinner
-            android:id="@+id/spinBranch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="8dp" />
-
-        <Spinner
-            android:id="@+id/spinFilter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="8dp" />
-    </LinearLayout>
-
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart"
         android:layout_width="match_parent"

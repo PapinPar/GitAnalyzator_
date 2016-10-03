@@ -4,8 +4,10 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.developers.CurrentDev;
 import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
+import chi_gitanalyz.gitanalyzator.retrofit.model.project.home.Home;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.ProjectsID;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.updateprofile.UpdateUserRequest;
 import retrofit2.Call;
@@ -34,17 +36,26 @@ public interface MyApi {
     Call<String> signOut(@Query("token") String token);
 
     @GET("auth/validate_token")
-    void validate_token(@Query("token") String token);
+    Call<User> validateToken(@Query("token") String token);
 
     @PUT("update_profile")
     Call<InRequest> updateProfile(@Body UpdateUserRequest user);
 
     //*********************** PROJECT *************************
+    @GET("projects/{id}/home")
+    Call<Home> getHome(@Path("id") String id,@Query("token") String token);
+
+    @GET("projects/{id}/")
+    Call<ProjectsID> projectFilter(@Path("id") String id, @Query("token") String token, @Query("branch_id") Integer branch, @Query("developer_id") Integer dev);
+
     @GET("projects")
     Call<Projects> projectList(@Query("token") String token);
 
     @GET("projects/{id}/")
     Call<ProjectsID> projectAnalyz(@Path("id") String id, @Query("token") String token);
+
+    @POST("projects")
+    Call<CreateProject> createProject(@Body CreateProject project, @Query("token") String token);
 
     //*********************** DEVELOPER *************************
     @GET("developers")
@@ -52,8 +63,5 @@ public interface MyApi {
 
     @GET("developers/{id}")
     Call<CurrentDev> getCurrDeveloper(@Path("id") String id, @Query("token") String token);
-
-    @POST("projects")
-    Call<CreateProject> createProject(@Body CreateProject project, @Query("token") String token);
 
 }

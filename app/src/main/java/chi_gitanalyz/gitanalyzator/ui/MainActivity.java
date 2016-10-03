@@ -1,5 +1,6 @@
 package chi_gitanalyz.gitanalyzator.ui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InResult;
 import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
 import chi_gitanalyz.gitanalyzator.ui.project.ProjectsActivity;
+import dmax.dialog.SpotsDialog;
 
 
 public class MainActivity extends BaseActivity {
@@ -24,12 +26,21 @@ public class MainActivity extends BaseActivity {
     MaterialEditText etEmail;
     MaterialEditText etPassword;
 
+    String TOKEN;
+
+    AlertDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TOKEN = "NULL";
+        dialog = new SpotsDialog(this);
+        dialog.show();
+        app.getDb().loadUser();
         setContentView(R.layout.activity_main);
         etEmail = (MaterialEditText) findViewById(R.id.email);
         etPassword = (MaterialEditText) findViewById(R.id.password);
+
         findViewById(R.id.butSignIn).setOnClickListener((view) ->
                 {
                     Email = etEmail.getText().toString();
@@ -61,7 +72,19 @@ public class MainActivity extends BaseActivity {
             case I_Db.USER_DELETE:
                 Log.d("DB", "user deleted");
                 break;
+            case I_Db.USER_LOAD:
+                loaded((Manager) dbObject);
+                break;
         }
+    }
+
+    private void loaded(Manager dbObject) {
+        if (dbObject != null) {
+            TOKEN = dbObject.getToken().toString();
+            app.getNet().validateToken(dbObject.getToken().toString());
+        }
+        else
+            dialog.dismiss();
     }
 
 
@@ -79,7 +102,21 @@ public class MainActivity extends BaseActivity {
             case I_Net.Sign_IN:
                 InSuccess((InResult) NetObjects);
                 break;
+            case I_Net.Validate_Token:
+                Success((User) NetObjects);
+                break;
         }
+    }
+
+    private void Success(User netObjects) {
+        Manager manager = new Manager();
+        manager.setToken(TOKEN);
+        app.getDb().saveUser(manager);
+        Intent intent = new Intent(this, ProjectsActivity.class);
+        intent.putExtra("TOKEN_ID", TOKEN);
+        intent.putExtra("MANAGER_ID", netObjects.getId().toString());
+        dialog.dismiss();
+        startActivity(intent);
     }
 
     @Override

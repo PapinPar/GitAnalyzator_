@@ -4,29 +4,30 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
-    <Spinner
-        android:id="@+id/spinProject_"
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
-
     <Spinner
         android:id="@+id/spinDev_"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical|center_horizontal" />
 
     <Spinner
         android:id="@+id/spinBranch_"
         android:layout_width="match_parent"
-
-
         android:layout_height="40dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical|center_horizontal" />
 
     <Spinner
         android:id="@+id/spinFilter_"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <Button
+        android:text="OK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/butOK_dialog" />
 </LinearLayout>

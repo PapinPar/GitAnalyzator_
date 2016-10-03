@@ -17,10 +17,6 @@ import chi_gitanalyz.gitanalyzator.R;
 
 public class DevAdapter extends RecyclerView.Adapter<DevAdapter.DevViewHolder> {
 
-    public interface DevClickListner{
-        void getPosition(int position);
-    }
-
     public static class DevViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView devName;
@@ -40,11 +36,9 @@ public class DevAdapter extends RecyclerView.Adapter<DevAdapter.DevViewHolder> {
     }
 
     List<DevelopersInfo> developersInfoList;
-    DevClickListner click;
 
-    public DevAdapter(List<DevelopersInfo> developersInfoList, DevClickListner click) {
+    public DevAdapter(List<DevelopersInfo> developersInfoList) {
         this.developersInfoList = developersInfoList;
-        this.click = click;
     }
 
     @Override
@@ -60,14 +54,6 @@ public class DevAdapter extends RecyclerView.Adapter<DevAdapter.DevViewHolder> {
         holder.email.setText("Email : "+developersInfoList.get(i).email);
         holder.comitCount.setText("Comits count : "+developersInfoList.get(i).comit_count);
         holder.projects.setText("Projects : "+developersInfoList.get(i).projectList);
-
-        holder.devName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                click.getPosition(i);
-            }
-        });
-
     }
 
     @Override
