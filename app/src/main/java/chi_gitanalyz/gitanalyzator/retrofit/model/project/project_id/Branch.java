@@ -15,6 +15,18 @@ public class    Branch {
     @SerializedName("project_id")
     @Expose
     private Integer projectId;
+    @SerializedName("status")
+    @Expose
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @SerializedName("commits")
     @Expose
     private List<Commit> commits = new ArrayList<Commit>();

@@ -135,8 +135,10 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
         projectNames.clear();
         projectList = projectsList.getProjects();
-        for (int i = 0; i < projectList.size(); i++)
-            projectNames.add(new ProjectNames(projectList.get(i).getName()));
+        for (int i = 0; i < projectList.size(); i++) {
+            if (projectsList.getProjects().get(i).getStatus().equals("completed"))
+                projectNames.add(new ProjectNames(projectList.get(i).getName()));
+        }
         ProjectAdapter adapter = new ProjectAdapter(projectNames, this);
         recyclerView.setAdapter(adapter);
         dialog.dismiss();

@@ -13,20 +13,10 @@ public class Projects {
     @Expose
     private List<Project> projects = new ArrayList<Project>();
 
-    /**
-     * 
-     * @return
-     *     The projects
-     */
     public List<Project> getProjects() {
         return projects;
     }
 
-    /**
-     * 
-     * @param projects
-     *     The projects
-     */
     public void setProjects(List<Project> projects) {
         this.projects = projects;
     }

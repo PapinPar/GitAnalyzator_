@@ -37,7 +37,17 @@ public class Project {
     @SerializedName("branches")
     @Expose
     private List<Branch> branches = new ArrayList<Branch>();
+    @SerializedName("status")
+    @Expose
+    private String status;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;

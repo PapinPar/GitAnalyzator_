@@ -12,6 +12,17 @@ public class Branch_h {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("status")
+    @Expose
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     /**
      * 

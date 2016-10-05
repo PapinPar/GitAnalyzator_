@@ -12,27 +12,39 @@ public class ProjectsID {
     @SerializedName("id")
     @Expose
     private Integer id;
+
     @SerializedName("name")
     @Expose
     private String name;
+
     @SerializedName("user_id")
     @Expose
     private Integer userId;
+
     @SerializedName("secret_token")
     @Expose
     private String secretToken;
+
     @SerializedName("ssh")
     @Expose
     private String ssh;
+
     @SerializedName("webhook_name")
     @Expose
     private String webhookName;
+
     @SerializedName("gitlab_project_id")
     @Expose
     private Object gitlabProjectId;
+
+    @SerializedName("status")
+    @Expose
+    private String status;
+
     @SerializedName("developers")
     @Expose
     private List<Developer> developers = new ArrayList<Developer>();
+
     @SerializedName("branches")
     @Expose
     private List<Branch> branches = new ArrayList<Branch>();
@@ -111,4 +123,11 @@ public class ProjectsID {
         this.branches = branches;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
