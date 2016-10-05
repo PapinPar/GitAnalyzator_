@@ -3,6 +3,7 @@ package chi_gitanalyz.gitanalyzator.ui.project;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,8 +25,10 @@ import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.ValueShape;
-import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
+
+import static android.provider.Telephony.TextBasedSmsColumns.STATUS_COMPLETE;
+import static android.provider.Telephony.TextBasedSmsColumns.STATUS_NONE;
 
 /**
  * Created by Papin on 27.09.2016.
@@ -44,6 +47,8 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
 
     AlertDialog dialog;
 
+    boolean check;
+
 
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
@@ -57,6 +62,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     ArrayList<String> branch;
     ArrayList<String> filter;
     FragmentDialog fragmentDialog;
+    Handler h;
 
 
     @Override
@@ -83,7 +89,23 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
 
         dialog = new SpotsDialog(this);
         dialog.show();
-        app.getNet().projectHome(PROJECT_ID, TOKEN_ID);
+        check = isNetworkConnected();
+        if (check == true)
+            app.getNet().projectHome(PROJECT_ID, TOKEN_ID);
+        else
+            Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
+
+        h = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                switch (msg.what) {
+                    case STATUS_NONE:
+                        break;
+                    case STATUS_COMPLETE:
+                        dialog.dismiss();
+                }
+            }
+        };
+        h.sendEmptyMessage(STATUS_NONE);
     }
 
     private void createGraph(ProjectsID netObjects) {
@@ -98,65 +120,85 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     @Override
     public void getList(Integer branch, Integer dev, Integer filter) {
         filter_id = filter;
-        dialog.show();
-        if (branch == -5 && dev > 0)
-            app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, null, dev);
-        else if (dev == -5 && branch > 0)
-            app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, branch, null);
-        else if (branch == -5 && dev == -5)
-            app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, null, null);
-        else if (dev != -5 & branch != -5)
-            app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, branch, dev);
+        if (isNetworkConnected() == true) {
+            dialog.show();
+            if (branch == -5 && dev > 0)
+                app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, null, dev);
+            else if (dev == -5 && branch > 0)
+                app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, branch, null);
+            else if (branch == -5 && dev == -5)
+                app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, null, null);
+            else if (dev != -5 & branch != -5)
+                app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, branch, dev);
+        } else {
+            Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+        }
+
     }
 
 
     private void generateData(ProjectsID netObjects) {
-        List<Line> lines = new ArrayList<Line>();
-        List<PointValue> values;
-        int color = 0;
-        lines.clear();
-        for (int i = 0; i < netObjects.getBranches().size(); i++) {
-            values = new ArrayList<PointValue>();
-            for (int j = 0; j < netObjects.getBranches().get(i).getCommits().size() - 1; j++) {
-                if (filter_id == 0)
-                    values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getScore()));
-                if (filter_id == 1)
-                    values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getDuplications()));
-                if (filter_id == 2)
-                    values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getSmells()));
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                List<Line> lines = new ArrayList<Line>();
+                float max = 0;
+                List<PointValue> values;
+                int color = 0;
+                lines.clear();
+                for (int i = 0; i < netObjects.getBranches().size(); i++) {
+                    values = new ArrayList<PointValue>();
+                    for (int j = 0; j < netObjects.getBranches().get(i).getCommits().size() - 0; j++) {
+                        if (filter_id == 0)
+                            values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getScore()));
+                        if (filter_id == 1)
+                            values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getDuplications()));
+                        if (filter_id == 2)
+                            values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getSmells()));
+                        if(max<values.get(j).getY())
+                            max = values.get(j).getY();
+                    }
+                    Line line = new Line(values);
+                    if (color >= 9)
+                        color = 0;
+                    line.setColor(ColorsUtilis.COLORS[color]);
+                    color++;
+                    line.setCubic(isCubic);
+                    line.setFilled(isFilled);
+                    line.setHasLabels(hasLabels);
+                    line.setHasLabelsOnlyForSelected(hasLabelForSelected);
+                    line.setHasLines(hasLines);
+                    line.setHasPoints(hasPoints);
+                    lines.add(line);
+                }
+
+                values = new ArrayList<PointValue>();
+                values.add(new PointValue(1,max+2));
+                Line line = new Line(values);
+                lines.add(line);
+
+                data = new LineChartData(lines);
+
+                if (hasAxes) {
+                    Axis axisX = new Axis();
+                    Axis axisY = new Axis().setHasLines(true);
+                    if (hasAxesNames) {
+                        axisX.setName("Comits");
+                        axisY.setName("" + filter.get(filter_id));
+                    }
+                    data.setAxisXBottom(axisX);
+                    data.setAxisYLeft(axisY);
+                } else {
+                    data.setAxisXBottom(null);
+                    data.setAxisYLeft(null);
+                }
+
+                data.setBaseValue(Float.POSITIVE_INFINITY);
+                chart.setLineChartData(data);
+                h.sendEmptyMessage(STATUS_COMPLETE);
             }
-            Line line = new Line(values);
-            if (color > 4)
-                color = 0;
-            line.setColor(ChartUtils.COLORS[color]);
-            color++;
-            line.setCubic(isCubic);
-            line.setFilled(isFilled);
-            line.setHasLabels(hasLabels);
-            line.setHasLabelsOnlyForSelected(hasLabelForSelected);
-            line.setHasLines(hasLines);
-            line.setHasPoints(hasPoints);
-            lines.add(line);
-        }
-        data = new LineChartData(lines);
-
-        if (hasAxes) {
-            Axis axisX = new Axis();
-            Axis axisY = new Axis().setHasLines(true);
-            if (hasAxesNames) {
-                axisX.setName("Comits");
-                axisY.setName("" + filter.get(filter_id));
-            }
-            data.setAxisXBottom(axisX);
-            data.setAxisYLeft(axisY);
-        } else {
-            data.setAxisXBottom(null);
-            data.setAxisYLeft(null);
-        }
-
-        data.setBaseValue(Float.NEGATIVE_INFINITY);
-        chart.setLineChartData(data);
-
+        });
+        t.start();
     }
 
     private class ValueTouchListener implements LineChartOnValueSelectListener {
@@ -174,10 +216,6 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     @Override
     public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
-            case I_Net.PROJECT_ANALYZ:
-                dialog.dismiss();
-                createGraph((ProjectsID) NetObjects);
-                break;
             case I_Net.HOME_PROJECT:
                 dialog.dismiss();
                 fragmentDialog.getListner(this, (Home) NetObjects);
@@ -185,7 +223,6 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
                 fragmentDialog.show(getFragmentManager(), "Filters");
                 break;
             case I_Net.FILT_PROJECT:
-                dialog.dismiss();
                 createGraph((ProjectsID) NetObjects);
                 break;
         }
@@ -200,7 +237,12 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
         switch (item.getItemId()) {
             case R.id.newFilter:
                 dialog.show();
-                app.getNet().projectHome(PROJECT_ID, TOKEN_ID);
+                if (isNetworkConnected() == true)
+                    app.getNet().projectHome(PROJECT_ID, TOKEN_ID);
+                else {
+                    Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
                 break;
             default:
                 break;

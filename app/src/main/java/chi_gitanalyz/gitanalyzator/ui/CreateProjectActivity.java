@@ -3,6 +3,7 @@ package chi_gitanalyz.gitanalyzator.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -23,6 +24,7 @@ public class CreateProjectActivity extends BaseActivity {
     String TOKEN;
     String S_name;
     String S_ssh;
+    boolean check;
 
 
     @Override
@@ -49,7 +51,11 @@ public class CreateProjectActivity extends BaseActivity {
                     project.setName(S_name);
                     create.setUser(project);
 
-                    app.getNet().createProject(create,TOKEN);
+                    check = isNetworkConnected();
+                    if (check == true)
+                        app.getNet().createProject(create, TOKEN);
+                    else
+                        Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
                 }
         );
 
@@ -57,11 +63,19 @@ public class CreateProjectActivity extends BaseActivity {
 
     @Override
     public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
-        finish();
+        switch (evetId) {
+            case I_Net.CREATE_PROJECT:
+                finish();
+                break;
+        }
     }
 
     @Override
     public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
-
+        switch (evetId) {
+            case I_Net.CREATE_PROJECT:
+                Toast.makeText(this, "Chech our internet connection and input data", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

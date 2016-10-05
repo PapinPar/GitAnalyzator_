@@ -12,7 +12,6 @@ import java.util.concurrent.Executor;
 import chi_gitanalyz.gitanalyzator.core.api.I_Net;
 import chi_gitanalyz.gitanalyzator.core.observer.NetSubscriber;
 import chi_gitanalyz.gitanalyzator.retrofit.RestApiWrapper;
-import chi_gitanalyz.gitanalyzator.retrofit.model.developers.CurrentDev;
 import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
 import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
@@ -108,11 +107,10 @@ public class ConnectionManager implements I_Net {
             public void run() {
                 try {
                     Response<User> response = RestApiWrapper.getInstance().validateToken(token);
-                    if(response.isSuccessful())
-                    {
+                    if (response.isSuccessful()) {
                         User result = response.body();
-                        notifySuccessSubscribers(Validate_Token,result);
-                    }else {
+                        notifySuccessSubscribers(Validate_Token, result);
+                    } else {
                         String message = response.raw().message();
                         notifyErrorSubscribers(Validate_Token, message);
                     }
@@ -131,9 +129,13 @@ public class ConnectionManager implements I_Net {
             public void run() {
                 try {
                     Response<Home> response = RestApiWrapper.getInstance().getHome(id, token);
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         Home resp = response.body();
-                        notifySuccessSubscribers(HOME_PROJECT,resp);}
+                        notifySuccessSubscribers(HOME_PROJECT, resp);
+                    }
+                    else {
+                        notifyErrorSubscribers(HOME_PROJECT,response.raw().message().toString());
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -149,9 +151,14 @@ public class ConnectionManager implements I_Net {
             public void run() {
                 try {
                     Response<ProjectsID> response = RestApiWrapper.getInstance().projectFilter(id, token, branch, dev);
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         ProjectsID result = response.body();
-                        notifySuccessSubscribers(FILT_PROJECT,result);}
+                        notifySuccessSubscribers(FILT_PROJECT, result);
+                    }
+                    else
+                    {
+                        notifyErrorSubscribers(FILT_PROJECT,response.raw().message().toString());
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -170,23 +177,8 @@ public class ConnectionManager implements I_Net {
                         Projects result = response.body();
                         notifySuccessSubscribers(PROJECT_LIST, result);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void projectAnalyz(@NonNull String id, String projectsID) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response<ProjectsID> response = RestApiWrapper.getInstance().projectAnalyz(id, projectsID);
-                    if (response.isSuccessful()) {
-                        ProjectsID result = response.body();
-                        notifySuccessSubscribers(PROJECT_ANALYZ, result);
+                    else{
+                        notifyErrorSubscribers(PROJECT_LIST,response.raw().message().toString());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -202,15 +194,57 @@ public class ConnectionManager implements I_Net {
             public void run() {
 
                 try {
-                    Response<CreateProject> response = RestApiWrapper.getInstance().createProject(project,token);
-                    if (response.isSuccessful())
+                    Response<CreateProject> response = RestApiWrapper.getInstance().createProject(project, token);
+                    if (response.isSuccessful()) {
+                        notifySuccessSubscribers(CREATE_PROJECT, response);
+                    }
+                    else
                     {
-                        notifySuccessSubscribers(CREATE_PROJECT,response);
+                        String message = response.raw().message().toString();
+                        notifyErrorSubscribers(CREATE_PROJECT,message);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+            }
+        });
+    }
+
+    @Override
+    public void deleteProject(@NonNull String id, @NonNull String token) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<String> response = RestApiWrapper.getInstance().deleteProject(id, token);
+                    if (response.isSuccessful()) {
+                        notifySuccessSubscribers(DEL_PROJECT, response);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void updateProject(@NonNull String id, @NonNull CreateProject projectsID, @NonNull String token) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<CreateProject> response = RestApiWrapper.getInstance().updateProject(id, projectsID, token);
+                    if (response.isSuccessful()) {
+                        CreateProject result = response.body();
+                        notifySuccessSubscribers(UPD_PROJECT, result);
+                    } else {
+                        String message = response.raw().message();
+                        notifyErrorSubscribers(UPD_PROJECT, message);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -223,26 +257,11 @@ public class ConnectionManager implements I_Net {
                 try {
                     Response<Developers> response = RestApiWrapper.getInstance().getAllDev(token);
                     if (response.isSuccessful()) {
-                       Developers result = response.body();
-                        notifySuccessSubscribers(ALL_DEV,result);
+                        Developers result = response.body();
+                        notifySuccessSubscribers(ALL_DEV, result);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void getCuurDev(@NonNull String id, @NonNull String token) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response<CurrentDev> response = RestApiWrapper.getInstance().getCurrDev(id, token);
-                    if(response.isSuccessful()){
-                        CurrentDev result = response.body();
-                        notifySuccessSubscribers(CURR_DEV, result);
+                    else {
+                        notifyErrorSubscribers(ALL_DEV,response.raw().message().toString());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

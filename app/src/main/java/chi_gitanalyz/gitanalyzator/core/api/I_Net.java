@@ -15,8 +15,12 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
 
 public interface I_Net extends Subjcet<NetSubscriber> {
 
-    @IntDef({Sign_UP,Sign_IN,Sign_OUT, Validate_Token,UPD_Profile,PROJECT_LIST,PROJECT_ANALYZ,ALL_DEV,CURR_DEV,CREATE_PROJECT,HOME_PROJECT,FILT_PROJECT})
-    @interface NetEvent{}
+    @IntDef({Sign_UP, Sign_IN, Sign_OUT, Validate_Token, UPD_Profile,
+            PROJECT_LIST, PROJECT_ANALYZ
+            , ALL_DEV, CURR_DEV,
+            CREATE_PROJECT, HOME_PROJECT, FILT_PROJECT, DEL_PROJECT, UPD_PROJECT})
+    @interface NetEvent {
+    }
 
     int Sign_UP = 101;
     int Sign_IN = 102;
@@ -33,24 +37,33 @@ public interface I_Net extends Subjcet<NetSubscriber> {
     int CREATE_PROJECT = 200;
     int HOME_PROJECT = 201;
     int FILT_PROJECT = 202;
+    int DEL_PROJECT = 203;
+    int UPD_PROJECT = 204;
 
     //*************************************** AUTH ***************************************
     void signIN(@NonNull InRequest user);
+
     void signUP(@NonNull UpRequset user);
+
     void signOUT(@NonNull String token);
+
     void validateToken(@NonNull String token);
 
     //*************************************** PROJECTS ***************************************
     void projectHome(@NonNull String id, @NonNull String token);
+
     void projectFilter(@NonNull String id, @NonNull String token, Integer branch, Integer dev);
+
     void projectList(@NonNull String token);
-    void projectAnalyz(@NonNull String id, @NonNull String token);
+
     void createProject(@NonNull CreateProject project, @NonNull String token);
+
+    void deleteProject(@NonNull String id, @NonNull String token);
+
+    void updateProject(@NonNull String id, @NonNull CreateProject projectsID, @NonNull String token);
 
     //*************************************** DEVELOPERS ***************************************
     void getAllDev(@NonNull String token);
-    void getCuurDev(@NonNull String id, @NonNull String token);
-
 
 
 }

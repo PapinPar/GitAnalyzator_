@@ -27,6 +27,7 @@ public class MainActivity extends BaseActivity {
     MaterialEditText etPassword;
 
     String TOKEN;
+    boolean check;
 
     AlertDialog dialog;
 
@@ -50,7 +51,11 @@ public class MainActivity extends BaseActivity {
                     user.setEmail(Email);
                     user.setPassword(Password);
                     request.setUser(user);
-                    app.getNet().signIN(request);
+                    check = isNetworkConnected();
+                    if (check == true)
+                        app.getNet().signIN(request);
+                    else
+                        Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
                 }
         );
 
@@ -81,9 +86,14 @@ public class MainActivity extends BaseActivity {
     private void loaded(Manager dbObject) {
         if (dbObject != null) {
             TOKEN = dbObject.getToken().toString();
-            app.getNet().validateToken(dbObject.getToken().toString());
-        }
-        else
+            check = isNetworkConnected();
+            if (check == true)
+                app.getNet().validateToken(dbObject.getToken().toString());
+            else {
+                Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        } else
             dialog.dismiss();
     }
 
@@ -123,7 +133,7 @@ public class MainActivity extends BaseActivity {
     public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
             case I_Net.Sign_IN:
-                InError((String) NetObjects);
+                Toast.makeText(this, "Chech our internet connection and input data", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -139,12 +149,6 @@ public class MainActivity extends BaseActivity {
         intent.putExtra("TOKEN_ID", response.getToken());
         intent.putExtra("MANAGER_ID", response.getUserId().toString());
         startActivity(intent);
-    }
-
-    private void InError(String netObjects) {
-        Log.d("Error", "" + netObjects);
-
-        Toast.makeText(this, "" + netObjects, Toast.LENGTH_SHORT).show();
     }
 
 

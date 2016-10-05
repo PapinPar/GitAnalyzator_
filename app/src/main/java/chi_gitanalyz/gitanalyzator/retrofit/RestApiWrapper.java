@@ -126,4 +126,16 @@ public class RestApiWrapper {
         Response<ProjectsID> response = idCall.execute();
         return response;
     }
+
+    public Response<String> deleteProject(String id, String token) throws IOException {
+        Call<String> call = api.deleteProject(id, token);
+        Response<String> response = call.execute();
+        return response;
+    }
+
+    public Response<CreateProject> updateProject(String id, CreateProject projectsID, String token)throws IOException {
+        Call<CreateProject> projectsIDCall = api.updateProject(id, projectsID, token);
+        Response<CreateProject> response = projectsIDCall.execute();
+        return response;
+    }
 }

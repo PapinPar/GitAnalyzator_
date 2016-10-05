@@ -16,27 +16,30 @@ import chi_gitanalyz.gitanalyzator.R;
  */
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.PersonViewHolder> {
 
-    public interface NameOnClickListener{
+    public interface NameOnClickListener {
         void getPosition(int position);
+
+        void getLongClick(int position);
     }
 
     public static class PersonViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
         TextView personName;
+
         PersonViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            personName = (TextView)itemView.findViewById(R.id.developer_name);
+            cv = (CardView) itemView.findViewById(R.id.cv);
+            personName = (TextView) itemView.findViewById(R.id.developer_name);
         }
     }
 
     List<ProjectNames> persons;
     NameOnClickListener click;
 
-    public ProjectAdapter(List<ProjectNames> persons, NameOnClickListener click){
+    public ProjectAdapter(List<ProjectNames> persons, NameOnClickListener click) {
         this.persons = persons;
-        this.click =  click;
+        this.click = click;
     }
 
     @Override
@@ -54,10 +57,19 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.PersonVi
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
         personViewHolder.personName.setText(persons.get(i).name);
+
         personViewHolder.personName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 click.getPosition(i);
+            }
+        });
+
+        personViewHolder.personName.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                click.getLongClick(i);
+                return true;
             }
         });
 

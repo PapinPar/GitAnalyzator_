@@ -1,5 +1,7 @@
 package chi_gitanalyz.gitanalyzator.ui;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +47,11 @@ public class BaseActivity extends AppCompatActivity implements DbSubscriber,NetS
         super.onStop();
         app.getNet().UnSubscribe(this);
         app.getDb().UnSubscribe(this);
+    }
+
+    public boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     @Override

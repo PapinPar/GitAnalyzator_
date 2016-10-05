@@ -35,20 +35,24 @@ public class SignUpActivity extends BaseActivity {
         etPassword = (MaterialEditText) findViewById(R.id.password);
         etConfirmPassword = (MaterialEditText) findViewById(R.id.confirmPass);
 
-        findViewById(R.id.butRegister).setOnClickListener((view)->
-        {
-            Email = etEmail.getText().toString();
-            Password = etPassword.getText().toString();
-            ConfirmPassword = etConfirmPassword.getText().toString();
+        findViewById(R.id.butRegister).setOnClickListener((view) ->
+                {
+                    Email = etEmail.getText().toString();
+                    Password = etPassword.getText().toString();
+                    ConfirmPassword = etConfirmPassword.getText().toString();
 
-            User NewUser = new User();
-            UpRequset requset = new UpRequset();
-            NewUser.setEmail(Email);
-            NewUser.setPassword(Password);
-            NewUser.setPassword_confirmation(ConfirmPassword);
-            requset.setUser(NewUser);
-            app.getNet().signUP(requset);
-        }
+                    User NewUser = new User();
+                    UpRequset requset = new UpRequset();
+                    NewUser.setEmail(Email);
+                    NewUser.setPassword(Password);
+                    NewUser.setPassword_confirmation(ConfirmPassword);
+                    requset.setUser(NewUser);
+                    if (isNetworkConnected() == true)
+                        app.getNet().signUP(requset);
+                    else {
+                        Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
         );
     }
 
@@ -65,7 +69,7 @@ public class SignUpActivity extends BaseActivity {
     public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
             case I_Net.Sign_UP:
-                UpError((String) NetObjects);
+                Toast.makeText(this, "Chech our internet connection and input data", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -73,6 +77,7 @@ public class SignUpActivity extends BaseActivity {
     private void UpSuccess(UpResult response) {
         Log.d("ID", "" + response.getId());
     }
+
     private void UpError(String netObjects) {
         Log.d("Error", "" + netObjects);
         Toast.makeText(this, "" + netObjects, Toast.LENGTH_SHORT).show();

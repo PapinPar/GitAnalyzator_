@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,11 @@ public class DevelopersActivity extends BaseActivity
     }
 
     private void loadDevelopers() {
+        if(isNetworkConnected()==true)
         app.getNet().getAllDev(TOKEN_ID);
+        else{
+            Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void fillListDevelopers(Developers netObjects) {

@@ -64,4 +64,10 @@ public interface MyApi {
     @GET("developers/{id}")
     Call<CurrentDev> getCurrDeveloper(@Path("id") String id, @Query("token") String token);
 
+    @DELETE("projects/{id}/")
+    Call<String> deleteProject(@Path("id") String id, @Query("token") String token);
+
+    @PUT("projects/{id}")
+    Call<CreateProject> updateProject(@Path("id") String id, @Body CreateProject projectsID, @Query("token") String token);
+
 }
