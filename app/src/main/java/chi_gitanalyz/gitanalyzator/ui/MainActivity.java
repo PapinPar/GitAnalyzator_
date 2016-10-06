@@ -54,7 +54,6 @@ public class MainActivity extends BaseActivity {
                         Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
                 }
         );
-
         findViewById(R.id.butSignUp).setOnClickListener((view) ->
                 {
                     Intent intent = new Intent(this, SignUpActivity.class);
