@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.R;
-import chi_gitanalyz.gitanalyzator.core.api.I_Net;
-import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.Developer;
+import chi_gitanalyz.gitanalyzator.core.api.Net;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.DevelopersResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Developer;
 import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
-import chi_gitanalyz.gitanalyzator.ui.adapter.ad_dev.DevAdapter;
-import chi_gitanalyz.gitanalyzator.ui.adapter.ad_dev.DevelopersInfo;
+import chi_gitanalyz.gitanalyzator.ui.adapter.DevAdapter;
+import chi_gitanalyz.gitanalyzator.ui.adapter.DevelopersInfo;
 
 /**
  * Created by Papin on 28.09.2016.
@@ -25,11 +25,12 @@ import chi_gitanalyz.gitanalyzator.ui.adapter.ad_dev.DevelopersInfo;
 public class DevelopersActivity extends BaseActivity
 {
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.LayoutManager layoutManager;
 
-    String TOKEN_ID;
-    List<Developer> devList;
-    private List<DevelopersInfo> DevelopersInfoList= new ArrayList<>();
+    private String tokenId;
+    private DevAdapter adapter;
+    private List<Developer> devList;
+    private List<DevelopersInfo> developersInfoList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,46 +38,47 @@ public class DevelopersActivity extends BaseActivity
         setContentView(R.layout.developers_layout);
 
         Intent intent = getIntent();
-        TOKEN_ID = intent.getStringExtra("TOKEN");
+        tokenId = intent.getStringExtra("token");
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_developers);
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new DevAdapter(developersInfoList);
+        recyclerView.setAdapter(adapter);
 
         loadDevelopers();
     }
 
     private void loadDevelopers() {
-        if(isNetworkConnected()==true)
-        app.getNet().getAllDev(TOKEN_ID);
+        if(isNetworkConnected())
+        app.getNet().getAllDev(tokenId);
         else{
             Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void fillListDevelopers(Developers netObjects) {
+    private void fillListDevelopers(DevelopersResponse netObjects) {
         devList = netObjects.getDevelopers();
         String projects="";
         for(int i =0;i<devList.size();i++) {
             for (int j = 0; j < devList.get(i).getProjects().size(); j++)
                 projects = projects + devList.get(i).getProjects().get(j).getName()+"; ";
-            DevelopersInfoList.add(new DevelopersInfo(devList.get(i).getCommitsCount(), devList.get(i).getEmail(), devList.get(i).getName(), projects));
+            developersInfoList.add(new DevelopersInfo(devList.get(i).getCommitsCount(), devList.get(i).getEmail(), devList.get(i).getName(), projects));
             projects = "";
         }
-        DevAdapter adapter = new DevAdapter(DevelopersInfoList);
-        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId){
-            case I_Net.ALL_DEV:
-                fillListDevelopers((Developers) NetObjects);
+            case Net.ALL_DEV:
+                fillListDevelopers((DevelopersResponse) NetObjects);
                 break;
         }
     }
 
     @Override
-    public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
     }
 }

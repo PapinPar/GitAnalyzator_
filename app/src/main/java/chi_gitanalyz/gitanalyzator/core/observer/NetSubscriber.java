@@ -1,6 +1,6 @@
 package chi_gitanalyz.gitanalyzator.core.observer;
 
-import chi_gitanalyz.gitanalyzator.core.api.I_Net;
+import chi_gitanalyz.gitanalyzator.core.api.Net;
 
 /**
  * Created by Papin on 22.09.2016.
@@ -8,7 +8,7 @@ import chi_gitanalyz.gitanalyzator.core.api.I_Net;
 
 public interface NetSubscriber extends Subscriber {
 
-    void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects);
+    void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects);
 
-    void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects);
+    void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects);
 }

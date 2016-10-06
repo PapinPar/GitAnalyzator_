@@ -18,16 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.R;
-import chi_gitanalyz.gitanalyzator.core.api.I_Db;
-import chi_gitanalyz.gitanalyzator.core.api.I_Net;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.Project;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
+import chi_gitanalyz.gitanalyzator.core.api.Db;
+import chi_gitanalyz.gitanalyzator.core.api.Net;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Project;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.ProjectsRequest;
 import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
 import chi_gitanalyz.gitanalyzator.ui.CreateProjectActivity;
 import chi_gitanalyz.gitanalyzator.ui.FragmentDialog;
 import chi_gitanalyz.gitanalyzator.ui.UpdateProjectActivity;
-import chi_gitanalyz.gitanalyzator.ui.adapter.ad_project.ProjectAdapter;
-import chi_gitanalyz.gitanalyzator.ui.adapter.ad_project.ProjectNames;
+import chi_gitanalyz.gitanalyzator.ui.adapter.ProjectAdapter;
+import chi_gitanalyz.gitanalyzator.ui.adapter.ProjectNames;
 import chi_gitanalyz.gitanalyzator.ui.developer.DevelopersActivity;
 import dmax.dialog.SpotsDialog;
 
@@ -37,20 +37,19 @@ import dmax.dialog.SpotsDialog;
 
 public class ProjectsActivity extends BaseActivity implements ProjectAdapter.NameOnClickListener {
 
-    String TOKEN = "_NULL_";
-    String PROJECT_ID;
-    String TOKEN_ID;
-    String MANAGER_ID;
+    private String token = "_NULL_";
+    private String projectId;
+    private String tokenId;
+    private String managerId;
     private List<ProjectNames> projectNames = new ArrayList<>();
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    List<Project> projectList;
-    LinearLayout view;
-    FragmentDialog fragmentDialog;
-    AlertDialog.Builder ad;
-    android.app.AlertDialog dialog;
-
-    boolean check;
+    private RecyclerView.LayoutManager layoutManager;
+    private List<Project> projectList;
+    private LinearLayout view;
+    private FragmentDialog fragmentDialog;
+    private AlertDialog.Builder ad;
+    private android.app.AlertDialog dialog;
+    private ProjectAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,17 +60,20 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         dialog.show();
 
         Intent intent = getIntent();
-        TOKEN_ID = intent.getStringExtra("TOKEN_ID");
-        MANAGER_ID = intent.getStringExtra("MANAGER_ID");
+        tokenId = intent.getStringExtra("tokenId");
+        managerId = intent.getStringExtra("managerId");
         recyclerView = (RecyclerView) findViewById(R.id.rec_view453);
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ProjectAdapter(projectNames, this);
+        recyclerView.setAdapter(adapter);
+
         fragmentDialog = new FragmentDialog();
         findViewById(R.id.but_all_dev).setOnClickListener((view) ->
                 {
-                    if (isNetworkConnected() == true) {
+                    if (isNetworkConnected()) {
                         Intent startDevActivity = new Intent(this, DevelopersActivity.class);
-                        startDevActivity.putExtra("TOKEN", TOKEN_ID);
+                        startDevActivity.putExtra("token", tokenId);
                         startActivity(startDevActivity);
                     } else
                         Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
@@ -84,8 +86,8 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
 
     private void loadProjects() {
-        if (isNetworkConnected() == true)
-            app.getNet().projectList(TOKEN_ID);
+        if (isNetworkConnected())
+            app.getNet().projectList(tokenId);
         else {
             Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
@@ -93,17 +95,17 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
     }
 
     @Override
-    public void onDbDataUpdated(@I_Db.DbEvent int eventId, Object dbObject) {
+    public void onDbDataUpdated(@Db.DbEvent int eventId, Object dbObject) {
         switch (eventId) {
         }
     }
 
 
     private void deleteUser() {
-        if (isNetworkConnected() == true) {
-            app.getNet().signOUT(TOKEN_ID);
+        if (isNetworkConnected()) {
+            app.getNet().signOUT(tokenId);
             app.getDb().deleteUser();
-            Log.d("DB", TOKEN);
+            Log.d("DB", token);
         } else {
             Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
@@ -113,34 +115,33 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
     //     *************************************** NET ***************************************
     @Override
-    public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
-            case I_Net.Sign_OUT:
+            case Net.Sign_OUT:
                 signOutSucces();
                 break;
-            case I_Net.PROJECT_LIST:
-                fillList((Projects) NetObjects);
+            case Net.PROJECT_LIST:
+                fillList((ProjectsRequest) NetObjects);
                 break;
-            case I_Net.PROJECT_ANALYZ:
+            case Net.PROJECT_ANALYZ:
                 Log.d("ANALYZ", "ANALYZ" + NetObjects);
                 break;
-            case I_Net.DEL_PROJECT:
+            case Net.DEL_PROJECT:
                 onRestart();
                 break;
         }
 
     }
 
-    private void fillList(Projects projectsList) {
+    private void fillList(ProjectsRequest projectsList) {
 
         projectNames.clear();
         projectList = projectsList.getProjects();
         for (int i = 0; i < projectList.size(); i++) {
             if (projectsList.getProjects().get(i).getStatus().equals("completed"))
-                projectNames.add(new ProjectNames(projectList.get(i).getName()));
+                projectNames.add(new ProjectNames(projectList.get(i).getName(), projectList.get(i).getHosting(),projectsList.getProjects().get(i).getId()));
         }
-        ProjectAdapter adapter = new ProjectAdapter(projectNames, this);
-        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         dialog.dismiss();
     }
 
@@ -156,8 +157,8 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
                 break;
             case R.id.item2:
                 Intent intent = new Intent(this, CreateProjectActivity.class);
-                intent.putExtra("USER_ID", MANAGER_ID);
-                intent.putExtra("TOKEN", TOKEN_ID);
+                intent.putExtra("USER_ID", managerId);
+                intent.putExtra("token", tokenId);
                 startActivity(intent);
                 break;
             default:
@@ -172,10 +173,10 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
     @Override
     public void getPosition(int position) {
-        if (isNetworkConnected() == true) {
-            String id = String.valueOf(projectList.get(position).getId());
+        if (isNetworkConnected()) {
+            String id = String.valueOf(projectNames.get(position).getId());
             Intent startActivity_Graph = new Intent(this, GraphProjectActivity.class);
-            startActivity_Graph.putExtra("_TOKEN_", TOKEN_ID);
+            startActivity_Graph.putExtra("_TOKEN_", tokenId);
             startActivity_Graph.putExtra("ID_PROJECT", id);
             startActivity(startActivity_Graph);
         } else
@@ -185,7 +186,7 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
     @Override
     public void getLongClick(int position) {
-        PROJECT_ID = String.valueOf(projectList.get(position).getId());
+        projectId = String.valueOf(projectNames.get(position).getId());
         showDialog(0);
     }
 
@@ -197,8 +198,8 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                if (isNetworkConnected() == true)
-                                    app.getNet().deleteProject(PROJECT_ID, TOKEN_ID);
+                                if (isNetworkConnected())
+                                    app.getNet().deleteProject(projectId, tokenId);
                                 else
                                     showToast();
                                 dialog.cancel();
@@ -222,8 +223,8 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
 
     private void updateProject() {
         Intent updProject = new Intent(this, UpdateProjectActivity.class);
-        updProject.putExtra("TOKEN_ID", TOKEN_ID);
-        updProject.putExtra("PROJECT_ID", PROJECT_ID);
+        updProject.putExtra("tokenId", tokenId);
+        updProject.putExtra("projectId", projectId);
         startActivity(updProject);
     }
 
@@ -232,8 +233,8 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         super.onRestart();
         Intent intent = new Intent(this, ProjectsActivity.class);
         overridePendingTransition(0, 0);//4
-        intent.putExtra("TOKEN_ID", TOKEN_ID);
-        intent.putExtra("MANAGER_ID", MANAGER_ID);
+        intent.putExtra("tokenId", tokenId);
+        intent.putExtra("managerId", managerId);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         finish();
         startActivity(intent);

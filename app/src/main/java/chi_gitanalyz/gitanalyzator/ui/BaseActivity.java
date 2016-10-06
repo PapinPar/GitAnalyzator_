@@ -8,10 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
-import chi_gitanalyz.gitanalyzator.core.CApplication;
+import chi_gitanalyz.gitanalyzator.core.GitAplication;
 import chi_gitanalyz.gitanalyzator.core.api.App;
-import chi_gitanalyz.gitanalyzator.core.api.I_Db;
-import chi_gitanalyz.gitanalyzator.core.api.I_Net;
+import chi_gitanalyz.gitanalyzator.core.api.Db;
+import chi_gitanalyz.gitanalyzator.core.api.Net;
 import chi_gitanalyz.gitanalyzator.core.observer.DbSubscriber;
 import chi_gitanalyz.gitanalyzator.core.observer.NetSubscriber;
 import chi_gitanalyz.gitanalyzator.db.sqlite.model.DbError;
@@ -27,7 +27,7 @@ public class BaseActivity extends AppCompatActivity implements DbSubscriber,NetS
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        app = CApplication.getApp(this);
+        app = GitAplication.getApp(this);
 
     }
 
@@ -55,22 +55,22 @@ public class BaseActivity extends AppCompatActivity implements DbSubscriber,NetS
     }
 
     @Override
-    public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects) {
 
     }
 
     @Override
-    public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
 
     }
 
     @Override
-    public void onDbDataUpdated(@I_Db.DbEvent int tableId, Object dbObject) {
+    public void onDbDataUpdated(@Db.DbEvent int tableId, Object dbObject) {
 
     }
 
     @Override
-    public void onDbErrorError(@I_Db.DbEvent int tableId, Object error) {
+    public void onDbErrorError(@Db.DbEvent int tableId, Object error) {
         DbError dbError = (DbError) error;
         toast(dbError.getMessage());
     }

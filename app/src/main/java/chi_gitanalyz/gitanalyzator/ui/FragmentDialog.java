@@ -13,7 +13,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 
 import chi_gitanalyz.gitanalyzator.R;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.home.Home;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.HomeResponse;
 
 /**
  * Created by Papin on 30.09.2016.
@@ -22,27 +22,27 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.project.home.Home;
 public class FragmentDialog extends DialogFragment {
 
 
-    Spinner SpinBranch;
-    Spinner SpinFilt;
-    Spinner SpinDev;
-    Button butOK;
+    private Spinner spinBranch;
+    private Spinner spinFilt;
+    private Spinner spinDev;
+    private Button butOK;
 
-    Integer id_br, id_dev, id_filt;
+    private Integer idBr, idDev, idFilt;
 
-    ArrayList<String> branch;
-    ArrayList<String> dev;
-    ArrayList<String> filter;
-    ArrayList<Integer> branch_ID;
-    ArrayList<Integer> dev_ID;
+    private ArrayList<String> branch;
+    private ArrayList<String> dev;
+    private ArrayList<String> filter;
+    private ArrayList<Integer> branchID;
+    private ArrayList<Integer> devID;
 
     private GetOnspinListner getOnspinListner;
-    private Home projects;
+    private HomeResponse projects;
 
     public interface GetOnspinListner {
         void getList(Integer dev, Integer branch, Integer filter);
     }
 
-    public void getListner(GetOnspinListner getOnspinListner, Home projects) {
+    public void getListner(GetOnspinListner getOnspinListner, HomeResponse projects) {
         this.getOnspinListner = getOnspinListner;
         this.projects = projects;
     }
@@ -53,16 +53,16 @@ public class FragmentDialog extends DialogFragment {
 
         View v = inflater.inflate(R.layout.custom_dialog_layout, null);
 
-        SpinBranch = (Spinner) v.findViewById(R.id.spinBranch_);
-        SpinDev = (Spinner) v.findViewById(R.id.spinDev_);
-        SpinFilt = (Spinner) v.findViewById(R.id.spinFilter_);
+        spinBranch = (Spinner) v.findViewById(R.id.spinBranch_);
+        spinDev = (Spinner) v.findViewById(R.id.spinDev_);
+        spinFilt = (Spinner) v.findViewById(R.id.spinFilter_);
 
         dev = new ArrayList<>();
         filter = new ArrayList<>();
         branch = new ArrayList<>();
 
-        dev_ID = new ArrayList<>();
-        branch_ID = new ArrayList<>();
+        devID = new ArrayList<>();
+        branchID = new ArrayList<>();
 
         dev.add("All developers");
         branch.add("All branches");
@@ -73,33 +73,33 @@ public class FragmentDialog extends DialogFragment {
 
         for (int i = 0; i < projects.getBranches().size(); i++) {
             branch.add(projects.getBranches().get(i).getName());
-            branch_ID.add(projects.getBranches().get(i).getId());
+            branchID.add(projects.getBranches().get(i).getId());
         }
 
         for (int i = 0; i < projects.getDevelopers().size(); i++) {
             dev.add(projects.getDevelopers().get(i).getName());
-            dev_ID.add(projects.getDevelopers().get(i).getId());
+            devID.add(projects.getDevelopers().get(i).getId());
         }
 
         ArrayAdapter<String> adapterBranch = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_spinner_item, branch);
         adapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        SpinBranch.setAdapter(adapterBranch);
+        spinBranch.setAdapter(adapterBranch);
 
         ArrayAdapter<String> adapterFilter = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_spinner_item, filter);
         adapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        SpinFilt.setAdapter(adapterFilter);
+        spinFilt.setAdapter(adapterFilter);
 
         ArrayAdapter<String> adapterDev = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_spinner_item, dev);
         adapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        SpinDev.setAdapter(adapterDev);
+        spinDev.setAdapter(adapterDev);
 
-        SpinBranch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinBranch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0)
-                    id_br = branch_ID.get(position - 1);
+                    idBr = branchID.get(position - 1);
                 else
-                    id_br = -5;
+                    idBr = -5;
             }
 
             @Override
@@ -108,13 +108,13 @@ public class FragmentDialog extends DialogFragment {
             }
         });
 
-        SpinDev.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinDev.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0)
-                    id_dev = dev_ID.get(position - 1);
+                    idDev = devID.get(position - 1);
                 else
-                    id_dev = -5;
+                    idDev = -5;
             }
 
             @Override
@@ -123,10 +123,10 @@ public class FragmentDialog extends DialogFragment {
             }
         });
 
-        SpinFilt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinFilt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                id_filt = position;
+                idFilt = position;
             }
 
             @Override
@@ -137,7 +137,7 @@ public class FragmentDialog extends DialogFragment {
         butOK = (Button) v.findViewById(R.id.butOK_dialog);
         v.findViewById(R.id.butOK_dialog).setOnClickListener((view) ->
                 {
-                    getOnspinListner.getList(id_br, id_dev, id_filt);
+                    getOnspinListner.getList(idBr, idDev, idFilt);
                     dismiss();
                 }
         );

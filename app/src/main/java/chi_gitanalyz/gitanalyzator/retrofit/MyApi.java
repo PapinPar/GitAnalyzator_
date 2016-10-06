@@ -1,15 +1,15 @@
 package chi_gitanalyz.gitanalyzator.retrofit;
 
-import chi_gitanalyz.gitanalyzator.retrofit.model.developers.CurrentDev;
-import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.home.Home;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.ProjectsID;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.updateprofile.UpdateUserRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.CurrentDevResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.DevelopersResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.ProjectsRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.HomeResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.ProjectsIdResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.InRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.UpRequset;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.UpdateUserRequest;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -43,31 +43,31 @@ public interface MyApi {
 
     //*********************** PROJECT *************************
     @GET("projects/{id}/home")
-    Call<Home> getHome(@Path("id") String id,@Query("token") String token);
+    Call<HomeResponse> getHome(@Path("id") String id, @Query("token") String token);
 
     @GET("projects/{id}/")
-    Call<ProjectsID> projectFilter(@Path("id") String id, @Query("token") String token, @Query("branch_id") Integer branch, @Query("developer_id") Integer dev);
+    Call<ProjectsIdResponse> projectFilter(@Path("id") String id, @Query("token") String token, @Query("branch_id") Integer branch, @Query("developer_id") Integer dev);
 
     @GET("projects")
-    Call<Projects> projectList(@Query("token") String token);
+    Call<ProjectsRequest> projectList(@Query("token") String token);
 
     @GET("projects/{id}/")
-    Call<ProjectsID> projectAnalyz(@Path("id") String id, @Query("token") String token);
+    Call<ProjectsIdResponse> projectAnalyz(@Path("id") String id, @Query("token") String token);
 
     @POST("projects")
-    Call<CreateProject> createProject(@Body CreateProject project, @Query("token") String token);
+    Call<CreateProjectRequest> createProject(@Body CreateProjectRequest project, @Query("token") String token);
 
     //*********************** DEVELOPER *************************
     @GET("developers")
-    Call<Developers> getDevelopers(@Query("token") String token);
+    Call<DevelopersResponse> getDevelopers(@Query("token") String token);
 
     @GET("developers/{id}")
-    Call<CurrentDev> getCurrDeveloper(@Path("id") String id, @Query("token") String token);
+    Call<CurrentDevResponse> getCurrDeveloper(@Path("id") String id, @Query("token") String token);
 
     @DELETE("projects/{id}/")
     Call<String> deleteProject(@Path("id") String id, @Query("token") String token);
 
     @PUT("projects/{id}")
-    Call<CreateProject> updateProject(@Path("id") String id, @Body CreateProject projectsID, @Query("token") String token);
+    Call<CreateProjectRequest> updateProject(@Path("id") String id, @Body CreateProjectRequest projectsID, @Query("token") String token);
 
 }

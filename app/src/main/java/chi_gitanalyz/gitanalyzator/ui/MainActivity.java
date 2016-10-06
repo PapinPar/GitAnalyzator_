@@ -9,32 +9,31 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import chi_gitanalyz.gitanalyzator.R;
-import chi_gitanalyz.gitanalyzator.core.api.I_Db;
-import chi_gitanalyz.gitanalyzator.core.api.I_Net;
+import chi_gitanalyz.gitanalyzator.core.api.Db;
+import chi_gitanalyz.gitanalyzator.core.api.Net;
 import chi_gitanalyz.gitanalyzator.db.sqlite.model.Manager;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InResult;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.InRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.InResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
 import chi_gitanalyz.gitanalyzator.ui.project.ProjectsActivity;
 import dmax.dialog.SpotsDialog;
 
 
 public class MainActivity extends BaseActivity {
 
-    String Email;
-    String Password;
-    MaterialEditText etEmail;
-    MaterialEditText etPassword;
+    private String email;
+    private String password;
+    private MaterialEditText etEmail;
+    private MaterialEditText etPassword;
 
-    String TOKEN;
-    boolean check;
+    private String token;
 
-    AlertDialog dialog;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TOKEN = "NULL";
+        token = "NULL";
         dialog = new SpotsDialog(this);
         dialog.show();
         app.getDb().loadUser();
@@ -44,15 +43,14 @@ public class MainActivity extends BaseActivity {
 
         findViewById(R.id.butSignIn).setOnClickListener((view) ->
                 {
-                    Email = etEmail.getText().toString();
-                    Password = etPassword.getText().toString();
+                    email = etEmail.getText().toString();
+                    password = etPassword.getText().toString();
                     User user = new User();
                     InRequest request = new InRequest();
-                    user.setEmail(Email);
-                    user.setPassword(Password);
+                    user.setEmail(email);
+                    user.setPassword(password);
                     request.setUser(user);
-                    check = isNetworkConnected();
-                    if (check == true)
+                    if (isNetworkConnected())
                         app.getNet().signIN(request);
                     else
                         Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
@@ -69,15 +67,15 @@ public class MainActivity extends BaseActivity {
 
     //      DB
     @Override
-    public void onDbDataUpdated(@I_Db.DbEvent int eventId, Object dbObject) {
+    public void onDbDataUpdated(@Db.DbEvent int eventId, Object dbObject) {
         switch (eventId) {
-            case I_Db.USER_UPD:
+            case Db.USER_UPD:
                 dbSaveUser();
                 break;
-            case I_Db.USER_DELETE:
+            case Db.USER_DELETE:
                 Log.d("DB", "user deleted");
                 break;
-            case I_Db.USER_LOAD:
+            case Db.USER_LOAD:
                 loaded((Manager) dbObject);
                 break;
         }
@@ -85,11 +83,10 @@ public class MainActivity extends BaseActivity {
 
     private void loaded(Manager dbObject) {
         if (dbObject != null) {
-            TOKEN = dbObject.getToken().toString();
-            check = isNetworkConnected();
-            if (check == true)
+            token = dbObject.getToken().toString();
+            if (isNetworkConnected()) {
                 app.getNet().validateToken(dbObject.getToken().toString());
-            else {
+            } else {
                 Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
@@ -103,16 +100,16 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onDbErrorError(@I_Db.DbEvent int tableId, Object error) {
+    public void onDbErrorError(@Db.DbEvent int tableId, Object error) {
     }
 
     @Override
-    public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
-            case I_Net.Sign_IN:
-                InSuccess((InResult) NetObjects);
+            case Net.Sign_IN:
+                InSuccess((InResponse) NetObjects);
                 break;
-            case I_Net.Validate_Token:
+            case Net.VALIDATE_TOKEN:
                 Success((User) NetObjects);
                 break;
         }
@@ -120,34 +117,34 @@ public class MainActivity extends BaseActivity {
 
     private void Success(User netObjects) {
         Manager manager = new Manager();
-        manager.setToken(TOKEN);
+        manager.setToken(token);
         app.getDb().saveUser(manager);
         Intent intent = new Intent(this, ProjectsActivity.class);
-        intent.putExtra("TOKEN_ID", TOKEN);
-        intent.putExtra("MANAGER_ID", netObjects.getId().toString());
+        intent.putExtra("tokenId", token);
+        intent.putExtra("managerId", netObjects.getId().toString());
         dialog.dismiss();
         startActivity(intent);
     }
 
     @Override
-    public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
-            case I_Net.Sign_IN:
+            case Net.Sign_IN:
                 Toast.makeText(this, "Chech our internet connection and input data", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     //      IN
-    private void InSuccess(InResult response) {
-        Log.d("TOKEN", "" + response.getToken());
-        Log.d("TOKEN", "" + response.getUserId());
+    private void InSuccess(InResponse response) {
+        Log.d("token", "" + response.getToken());
+        Log.d("token", "" + response.getUserId());
         Manager manager = new Manager();
         manager.setToken(response.getToken());
         app.getDb().saveUser(manager);
         Intent intent = new Intent(this, ProjectsActivity.class);
-        intent.putExtra("TOKEN_ID", response.getToken());
-        intent.putExtra("MANAGER_ID", response.getUserId().toString());
+        intent.putExtra("tokenId", response.getToken());
+        intent.putExtra("managerId", response.getUserId().toString());
         startActivity(intent);
     }
 

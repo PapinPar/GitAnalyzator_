@@ -9,9 +9,9 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import chi_gitanalyz.gitanalyzator.R;
-import chi_gitanalyz.gitanalyzator.core.api.I_Net;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.Project;
+import chi_gitanalyz.gitanalyzator.core.api.Net;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Project;
 
 /**
  * Created by Papin on 04.10.2016.
@@ -19,37 +19,37 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.project.Project;
 
 public class UpdateProjectActivity extends BaseActivity {
 
-    String TOKEN;
-    String PROECT_ID;
-    String S_name;
-    String S_ssh;
+    private String token;
+    private String proectId;
+    private String sName;
+    private String sSsh;
 
-    MaterialEditText name;
-    MaterialEditText SSH;
+    private MaterialEditText name;
+    private MaterialEditText SSH;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_project_layout);
         Intent intent = getIntent();
-        TOKEN = intent.getStringExtra("TOKEN_ID");
-        PROECT_ID = intent.getStringExtra("PROJECT_ID");
+        token = intent.getStringExtra("tokenId");
+        proectId = intent.getStringExtra("projectId");
 
         name = (MaterialEditText) findViewById(R.id.upd_project_name);
         SSH = (MaterialEditText) findViewById(R.id.upd_projet_SSH);
 
         findViewById(R.id.upd_butUpdate).setOnClickListener((v ->
         {
-            S_name = name.getText().toString();
-            S_ssh = SSH.getText().toString();
+            sName = name.getText().toString();
+            sSsh = SSH.getText().toString();
             Project project = new Project();
-            CreateProject create = new CreateProject();
-            project.setSsh(S_ssh);
-            project.setName(S_name);
+            CreateProjectRequest create = new CreateProjectRequest();
+            project.setSsh(sSsh);
+            project.setName(sName);
             create.setUser(project);
 
-            if (isNetworkConnected() == true)
-                app.getNet().updateProject(PROECT_ID, create, TOKEN);
+            if (isNetworkConnected())
+                app.getNet().updateProject(proectId, create, token);
             else {
                 Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
             }
@@ -57,10 +57,10 @@ public class UpdateProjectActivity extends BaseActivity {
     }
 
     @Override
-    public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects) {
         super.onNetRequestDone(evetId, NetObjects);
         switch (evetId) {
-            case I_Net.UPD_PROJECT:
+            case Net.UPD_PROJECT:
                 Toast.makeText(this, "Project Updated", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
@@ -68,12 +68,12 @@ public class UpdateProjectActivity extends BaseActivity {
     }
 
     @Override
-    public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
         super.onNetRequestDone(evetId, NetObjects);
         String s = (String) NetObjects;
         Log.d("ERROR", "ERROR " + s);
         switch (evetId) {
-            case I_Net.UPD_PROJECT:
+            case Net.UPD_PROJECT:
                 Toast.makeText(this, "" + s, Toast.LENGTH_SHORT).show();
                 break;
         }

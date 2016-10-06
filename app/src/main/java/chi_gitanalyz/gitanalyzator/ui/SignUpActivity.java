@@ -8,10 +8,10 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import chi_gitanalyz.gitanalyzator.R;
-import chi_gitanalyz.gitanalyzator.core.api.I_Net;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpResult;
+import chi_gitanalyz.gitanalyzator.core.api.Net;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.UpRequset;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.UpResponse;
 
 /**
  * Created by Papin on 26.09.2016.
@@ -19,13 +19,13 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpResult;
 
 public class SignUpActivity extends BaseActivity {
 
-    String Email;
-    String Password;
-    String ConfirmPassword;
+    private String email;
+    private String password;
+    private String confirmPassword;
 
-    MaterialEditText etEmail;
-    MaterialEditText etPassword;
-    MaterialEditText etConfirmPassword;
+    private MaterialEditText etEmail;
+    private MaterialEditText etPassword;
+    private MaterialEditText etConfirmPassword;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,17 +37,17 @@ public class SignUpActivity extends BaseActivity {
 
         findViewById(R.id.butRegister).setOnClickListener((view) ->
                 {
-                    Email = etEmail.getText().toString();
-                    Password = etPassword.getText().toString();
-                    ConfirmPassword = etConfirmPassword.getText().toString();
+                    email = etEmail.getText().toString();
+                    password = etPassword.getText().toString();
+                    confirmPassword = etConfirmPassword.getText().toString();
 
                     User NewUser = new User();
                     UpRequset requset = new UpRequset();
-                    NewUser.setEmail(Email);
-                    NewUser.setPassword(Password);
-                    NewUser.setPassword_confirmation(ConfirmPassword);
+                    NewUser.setEmail(email);
+                    NewUser.setPassword(password);
+                    NewUser.setPassword_confirmation(confirmPassword);
                     requset.setUser(NewUser);
-                    if (isNetworkConnected() == true)
+                    if (isNetworkConnected())
                         app.getNet().signUP(requset);
                     else {
                         Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
@@ -57,24 +57,24 @@ public class SignUpActivity extends BaseActivity {
     }
 
     @Override
-    public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
-            case I_Net.Sign_UP:
-                UpSuccess((UpResult) NetObjects);
+            case Net.Sign_UP:
+                UpSuccess((UpResponse) NetObjects);
                 break;
         }
     }
 
     @Override
-    public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
-            case I_Net.Sign_UP:
+            case Net.Sign_UP:
                 Toast.makeText(this, "Chech our internet connection and input data", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
-    private void UpSuccess(UpResult response) {
+    private void UpSuccess(UpResponse response) {
         Log.d("ID", "" + response.getId());
     }
 

@@ -5,15 +5,15 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 
-import chi_gitanalyz.gitanalyzator.retrofit.model.developers.CurrentDev;
-import chi_gitanalyz.gitanalyzator.retrofit.model.developers.Developers;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.CreateProject;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.Projects;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.home.Home;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.ProjectsID;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.InRequest;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signin.User;
-import chi_gitanalyz.gitanalyzator.retrofit.model.user.signup.UpRequset;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.CurrentDevResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.DevelopersResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.ProjectsRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.HomeResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.ProjectsIdResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.InRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.UpRequset;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -84,46 +84,46 @@ public class RestApiWrapper {
     }
 
 
-    public Response<Projects> projectList(String TOKEN) throws IOException {
-        Call<Projects> projectList = api.projectList(TOKEN);
-        Response<Projects> response = projectList.execute();
+    public Response<ProjectsRequest> projectList(String TOKEN) throws IOException {
+        Call<ProjectsRequest> projectList = api.projectList(TOKEN);
+        Response<ProjectsRequest> response = projectList.execute();
         return response;
     }
 
-    public Response<ProjectsID> projectAnalyz(String id, String token) throws IOException {
-        Call<ProjectsID> projectsIDCall = api.projectAnalyz(id, token);
-        Response<ProjectsID> response = projectsIDCall.execute();
+    public Response<ProjectsIdResponse> projectAnalyz(String id, String token) throws IOException {
+        Call<ProjectsIdResponse> projectsIDCall = api.projectAnalyz(id, token);
+        Response<ProjectsIdResponse> response = projectsIDCall.execute();
         return response;
     }
 
-    public Response<Developers> getAllDev(String token) throws IOException {
-        Call<Developers> developerCall = api.getDevelopers(token);
-        Response<Developers> response = developerCall.execute();
+    public Response<DevelopersResponse> getAllDev(String token) throws IOException {
+        Call<DevelopersResponse> developerCall = api.getDevelopers(token);
+        Response<DevelopersResponse> response = developerCall.execute();
         return response;
     }
 
-    public Response<CurrentDev> getCurrDev(String id, String token) throws IOException {
-        Call<CurrentDev> currentDevCall = api.getCurrDeveloper(id, token);
-        Response<CurrentDev> response = currentDevCall.execute();
+    public Response<CurrentDevResponse> getCurrDev(String id, String token) throws IOException {
+        Call<CurrentDevResponse> currentDevCall = api.getCurrDeveloper(id, token);
+        Response<CurrentDevResponse> response = currentDevCall.execute();
         return response;
     }
 
 
-    public Response<CreateProject> createProject(CreateProject project, String token) throws IOException {
-        Call<CreateProject> projectCall = api.createProject(project, token);
-        Response<CreateProject> response = projectCall.execute();
+    public Response<CreateProjectRequest> createProject(CreateProjectRequest project, String token) throws IOException {
+        Call<CreateProjectRequest> projectCall = api.createProject(project, token);
+        Response<CreateProjectRequest> response = projectCall.execute();
         return response;
     }
 
-    public Response<Home> getHome(String id, String token) throws IOException {
-        Call<Home> homeCall = api.getHome(id, token);
-        Response<Home> response = homeCall.execute();
+    public Response<HomeResponse> getHome(String id, String token) throws IOException {
+        Call<HomeResponse> homeCall = api.getHome(id, token);
+        Response<HomeResponse> response = homeCall.execute();
         return response;
     }
 
-    public Response<ProjectsID> projectFilter(String id, String token, Integer branch, Integer dev) throws IOException {
-        Call<ProjectsID> idCall = api.projectFilter(id, token, branch, dev);
-        Response<ProjectsID> response = idCall.execute();
+    public Response<ProjectsIdResponse> projectFilter(String id, String token, Integer branch, Integer dev) throws IOException {
+        Call<ProjectsIdResponse> idCall = api.projectFilter(id, token, branch, dev);
+        Response<ProjectsIdResponse> response = idCall.execute();
         return response;
     }
 
@@ -133,9 +133,9 @@ public class RestApiWrapper {
         return response;
     }
 
-    public Response<CreateProject> updateProject(String id, CreateProject projectsID, String token)throws IOException {
-        Call<CreateProject> projectsIDCall = api.updateProject(id, projectsID, token);
-        Response<CreateProject> response = projectsIDCall.execute();
+    public Response<CreateProjectRequest> updateProject(String id, CreateProjectRequest projectsID, String token)throws IOException {
+        Call<CreateProjectRequest> projectsIDCall = api.updateProject(id, projectsID, token);
+        Response<CreateProjectRequest> response = projectsIDCall.execute();
         return response;
     }
 }

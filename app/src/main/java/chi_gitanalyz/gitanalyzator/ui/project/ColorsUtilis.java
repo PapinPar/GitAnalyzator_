@@ -9,7 +9,6 @@ import android.graphics.Color;
 public class ColorsUtilis {
     public static final int COLOR_LightSlateBlue = Color.parseColor("#8470FF");
     public static final int COLOR_Cyan = Color.parseColor("#00FFFF");
-    public static final int BLACK = Color.parseColor("#000000");
     public static final int COLOR_DarkGreen = Color.parseColor("#006400");
     public static final int COLOR_DarkOliveGreen = Color.parseColor("#556B2F");
     public static final int COLOR_Green = Color.parseColor("#00FF00");

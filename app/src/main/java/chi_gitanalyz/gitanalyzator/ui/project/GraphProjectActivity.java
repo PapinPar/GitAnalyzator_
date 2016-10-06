@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.R;
-import chi_gitanalyz.gitanalyzator.core.api.I_Net;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.home.Home;
-import chi_gitanalyz.gitanalyzator.retrofit.model.project.project_id.ProjectsID;
+import chi_gitanalyz.gitanalyzator.core.api.Net;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.HomeResponse;
+import chi_gitanalyz.gitanalyzator.retrofit.model.response.ProjectsIdResponse;
 import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
 import chi_gitanalyz.gitanalyzator.ui.FragmentDialog;
 import dmax.dialog.SpotsDialog;
@@ -36,19 +36,16 @@ import static android.provider.Telephony.TextBasedSmsColumns.STATUS_NONE;
 
 public class GraphProjectActivity extends BaseActivity implements FragmentDialog.GetOnspinListner {
 
-    String TOKEN_ID;
-    String PROJECT_ID;
+    private String tokenId;
+    private String projectId;
 
     private LineChartView chart;
     private LineChartData data;
 
-    int branch_id;
-    int filter_id;
+    private int branch_id;
+    private int filter_id;
 
-    AlertDialog dialog;
-
-    boolean check;
-
+    private AlertDialog dialog;
 
     private boolean hasAxes = true;
     private boolean hasAxesNames = true;
@@ -59,10 +56,10 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     private boolean hasLabels = true;
     private boolean isCubic = true;
     private boolean hasLabelForSelected = true;
-    ArrayList<String> branch;
-    ArrayList<String> filter;
-    FragmentDialog fragmentDialog;
-    Handler h;
+    private ArrayList<String> branch;
+    private ArrayList<String> filter;
+    private FragmentDialog fragmentDialog;
+    private Handler h;
 
 
     @Override
@@ -70,8 +67,8 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.graph_project_layout);
         Intent intent = getIntent();
-        TOKEN_ID = intent.getStringExtra("_TOKEN_");
-        PROJECT_ID = intent.getStringExtra("ID_PROJECT");
+        tokenId = intent.getStringExtra("_TOKEN_");
+        projectId = intent.getStringExtra("ID_PROJECT");
 
         fragmentDialog = new FragmentDialog();
         branch_id = -5;
@@ -89,9 +86,8 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
 
         dialog = new SpotsDialog(this);
         dialog.show();
-        check = isNetworkConnected();
-        if (check == true)
-            app.getNet().projectHome(PROJECT_ID, TOKEN_ID);
+        if (isNetworkConnected())
+            app.getNet().projectHome(projectId, tokenId);
         else
             Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
 
@@ -108,7 +104,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
         h.sendEmptyMessage(STATUS_NONE);
     }
 
-    private void createGraph(ProjectsID netObjects) {
+    private void createGraph(ProjectsIdResponse netObjects) {
         hasLabels = !hasLabels;
         if (hasLabels) {
             hasLabelForSelected = false;
@@ -123,13 +119,13 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
         if (isNetworkConnected() == true) {
             dialog.show();
             if (branch == -5 && dev > 0)
-                app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, null, dev);
+                app.getNet().projectFilter(projectId, tokenId, null, dev);
             else if (dev == -5 && branch > 0)
-                app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, branch, null);
+                app.getNet().projectFilter(projectId, tokenId, branch, null);
             else if (branch == -5 && dev == -5)
-                app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, null, null);
+                app.getNet().projectFilter(projectId, tokenId, null, null);
             else if (dev != -5 & branch != -5)
-                app.getNet().projectFilter(PROJECT_ID, TOKEN_ID, branch, dev);
+                app.getNet().projectFilter(projectId, tokenId, branch, dev);
         } else {
             Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
@@ -138,7 +134,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     }
 
 
-    private void generateData(ProjectsID netObjects) {
+    private void generateData(ProjectsIdResponse netObjects) {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 List<Line> lines = new ArrayList<Line>();
@@ -155,11 +151,11 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
                             values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getDuplications()));
                         if (filter_id == 2)
                             values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getSmells()));
-                        if(max<values.get(j).getY())
+                        if (max < values.get(j).getY())
                             max = values.get(j).getY();
                     }
                     Line line = new Line(values);
-                    if (color >= 9)
+                    if (color >= 8)
                         color = 0;
                     line.setColor(ColorsUtilis.COLORS[color]);
                     color++;
@@ -173,7 +169,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
                 }
 
                 values = new ArrayList<PointValue>();
-                values.add(new PointValue(1,max+2));
+                values.add(new PointValue(1, max + 2));
                 Line line = new Line(values);
                 lines.add(line);
 
@@ -214,16 +210,16 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     }
 
     @Override
-    public void onNetRequestDone(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
-            case I_Net.HOME_PROJECT:
+            case Net.HOME_PROJECT:
                 dialog.dismiss();
-                fragmentDialog.getListner(this, (Home) NetObjects);
+                fragmentDialog.getListner(this, (HomeResponse) NetObjects);
                 fragmentDialog.setCancelable(false);
                 fragmentDialog.show(getFragmentManager(), "Filters");
                 break;
-            case I_Net.FILT_PROJECT:
-                createGraph((ProjectsID) NetObjects);
+            case Net.FILT_PROJECT:
+                createGraph((ProjectsIdResponse) NetObjects);
                 break;
         }
     }
@@ -238,7 +234,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
             case R.id.newFilter:
                 dialog.show();
                 if (isNetworkConnected() == true)
-                    app.getNet().projectHome(PROJECT_ID, TOKEN_ID);
+                    app.getNet().projectHome(projectId, tokenId);
                 else {
                     Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
@@ -251,7 +247,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     }
 
     @Override
-    public void onNetRequestFail(@I_Net.NetEvent int evetId, Object NetObjects) {
+    public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
         dialog.dismiss();
         Toast.makeText(this, "Check your internet conection please", Toast.LENGTH_SHORT).show();
         finish();
