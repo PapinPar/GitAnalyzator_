@@ -35,8 +35,6 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         token = "NULL";
         dialog = new SpotsDialog(this);
-        dialog.show();
-        app.getDb().loadUser();
         setContentView(R.layout.activity_main);
         etEmail = (MaterialEditText) findViewById(R.id.email);
         etPassword = (MaterialEditText) findViewById(R.id.password);
@@ -63,6 +61,13 @@ public class MainActivity extends BaseActivity {
                     startActivity(intent);
                 }
         );
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        dialog.show();
+        app.getDb().loadUser();
     }
 
     //      DB
@@ -147,7 +152,6 @@ public class MainActivity extends BaseActivity {
         intent.putExtra("managerId", response.getUserId().toString());
         startActivity(intent);
     }
-
 
 }
 
