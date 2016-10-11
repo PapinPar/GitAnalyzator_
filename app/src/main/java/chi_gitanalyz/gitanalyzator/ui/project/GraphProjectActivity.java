@@ -142,7 +142,6 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
 
     }
 
-
     private void generateData(ProjectsIdResponse netObjects) {
         Thread t = new Thread(new Runnable() {
             public void run() {
