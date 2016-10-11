@@ -9,6 +9,7 @@ import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.Branch;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.Developer;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.LanguagePercentage;
 
 public class ProjectsIdResponse {
 
@@ -51,7 +52,9 @@ public class ProjectsIdResponse {
     @SerializedName("branches")
     @Expose
     private List<Branch> branches = new ArrayList<Branch>();
-
+    @SerializedName("language_percentage")
+    @Expose
+    private LanguagePercentage languagePercentage;
 
     public Integer getId() {
         return id;
@@ -132,5 +135,13 @@ public class ProjectsIdResponse {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LanguagePercentage getLanguagePercentage() {
+        return languagePercentage;
+    }
+
+    public void setLanguagePercentage(LanguagePercentage languagePercentage) {
+        this.languagePercentage = languagePercentage;
     }
 }

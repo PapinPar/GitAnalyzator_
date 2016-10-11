@@ -1,7 +1,10 @@
 package chi_gitanalyz.gitanalyzator.ui;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -12,9 +15,9 @@ import chi_gitanalyz.gitanalyzator.R;
 import chi_gitanalyz.gitanalyzator.core.api.Db;
 import chi_gitanalyz.gitanalyzator.core.api.Net;
 import chi_gitanalyz.gitanalyzator.db.sqlite.model.Manager;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
 import chi_gitanalyz.gitanalyzator.retrofit.model.request.InRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.InResponse;
-import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
 import chi_gitanalyz.gitanalyzator.ui.project.ProjectsActivity;
 import dmax.dialog.SpotsDialog;
 
@@ -29,16 +32,18 @@ public class MainActivity extends BaseActivity {
     private String token;
 
     private AlertDialog dialog;
+    private SharedPreferences sPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         token = "NULL";
         dialog = new SpotsDialog(this);
+        dialog.show();
+        app.getDb().loadUser();
         setContentView(R.layout.activity_main);
         etEmail = (MaterialEditText) findViewById(R.id.email);
         etPassword = (MaterialEditText) findViewById(R.id.password);
-
         findViewById(R.id.butSignIn).setOnClickListener((view) ->
                 {
                     email = etEmail.getText().toString();
@@ -60,13 +65,6 @@ public class MainActivity extends BaseActivity {
                     startActivity(intent);
                 }
         );
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        dialog.show();
-        app.getDb().loadUser();
     }
 
     //      DB
@@ -119,13 +117,17 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void Success(User netObjects) {
         Manager manager = new Manager();
         manager.setToken(token);
         app.getDb().saveUser(manager);
         Intent intent = new Intent(this, ProjectsActivity.class);
-        intent.putExtra("tokenId", token);
-        intent.putExtra("managerId", netObjects.getId().toString());
+        sPref = getSharedPreferences("TOKENS",MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putString("tokenId", token);
+        ed.putString("managerId", netObjects.getId().toString());
+        ed.commit();
         dialog.dismiss();
         startActivity(intent);
     }
@@ -140,6 +142,7 @@ public class MainActivity extends BaseActivity {
     }
 
     //      IN
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void InSuccess(InResponse response) {
         Log.d("token", "" + response.getToken());
         Log.d("token", "" + response.getUserId());
@@ -147,8 +150,11 @@ public class MainActivity extends BaseActivity {
         manager.setToken(response.getToken());
         app.getDb().saveUser(manager);
         Intent intent = new Intent(this, ProjectsActivity.class);
-        intent.putExtra("tokenId", response.getToken());
-        intent.putExtra("managerId", response.getUserId().toString());
+        sPref = getSharedPreferences("TOKENS",MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putString("tokenId", response.getToken());
+        ed.putString("managerId", response.getUserId().toString());
+        ed.commit();
         startActivity(intent);
     }
 

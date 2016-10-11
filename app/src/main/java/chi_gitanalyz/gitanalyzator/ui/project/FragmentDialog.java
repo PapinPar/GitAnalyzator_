@@ -1,4 +1,4 @@
-package chi_gitanalyz.gitanalyzator.ui;
+package chi_gitanalyz.gitanalyzator.ui.project;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -25,21 +25,23 @@ public class FragmentDialog extends DialogFragment {
     private Spinner spinBranch;
     private Spinner spinFilt;
     private Spinner spinDev;
+    private Spinner spinLang;
     private Button butOK;
 
-    private Integer idBr, idDev, idFilt;
+    private Integer idBr, idDev, idFilt,idLeng;
 
     private ArrayList<String> branch;
     private ArrayList<String> dev;
     private ArrayList<String> filter;
     private ArrayList<Integer> branchID;
     private ArrayList<Integer> devID;
+    private ArrayList<String> language;
 
     private GetOnspinListner getOnspinListner;
     private HomeResponse projects;
 
     public interface GetOnspinListner {
-        void getList(Integer dev, Integer branch, Integer filter);
+        void getList(Integer dev, Integer branch, Integer filter,Integer language);
     }
 
     public void getListner(GetOnspinListner getOnspinListner, HomeResponse projects) {
@@ -56,10 +58,12 @@ public class FragmentDialog extends DialogFragment {
         spinBranch = (Spinner) v.findViewById(R.id.spinBranch_);
         spinDev = (Spinner) v.findViewById(R.id.spinDev_);
         spinFilt = (Spinner) v.findViewById(R.id.spinFilter_);
+        spinLang = (Spinner) v.findViewById(R.id.spinLanguage_);
 
         dev = new ArrayList<>();
         filter = new ArrayList<>();
         branch = new ArrayList<>();
+        language = new ArrayList<>();
 
         devID = new ArrayList<>();
         branchID = new ArrayList<>();
@@ -71,6 +75,9 @@ public class FragmentDialog extends DialogFragment {
         filter.add("Duplications");
         filter.add("Smells");
 
+        language.add("Ruby");
+        language.add("JS");
+
         for (int i = 0; i < projects.getBranches().size(); i++) {
             branch.add(projects.getBranches().get(i).getName());
             branchID.add(projects.getBranches().get(i).getId());
@@ -81,17 +88,22 @@ public class FragmentDialog extends DialogFragment {
             devID.add(projects.getDevelopers().get(i).getId());
         }
 
-        ArrayAdapter<String> adapterBranch = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_spinner_item, branch);
-        adapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapterBranch = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_dropdown_item_1line, branch);
+        adapterBranch.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinBranch.setAdapter(adapterBranch);
 
-        ArrayAdapter<String> adapterFilter = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_spinner_item, filter);
-        adapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapterFilter = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_dropdown_item_1line, filter);
+        adapterBranch.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinFilt.setAdapter(adapterFilter);
 
-        ArrayAdapter<String> adapterDev = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_spinner_item, dev);
-        adapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapterDev = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_dropdown_item_1line, dev);
+        adapterBranch.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinDev.setAdapter(adapterDev);
+
+        ArrayAdapter<String> adapterLanguage = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_dropdown_item_1line, language);
+        adapterLanguage.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spinLang.setAdapter(adapterLanguage);
+
 
         spinBranch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -134,10 +146,22 @@ public class FragmentDialog extends DialogFragment {
 
             }
         });
+
+        spinLang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                idLeng = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         butOK = (Button) v.findViewById(R.id.butOK_dialog);
         v.findViewById(R.id.butOK_dialog).setOnClickListener((view) ->
                 {
-                    getOnspinListner.getList(idBr, idDev, idFilt);
+                    getOnspinListner.getList(idBr, idDev, idFilt,idLeng);
                     dismiss();
                 }
         );

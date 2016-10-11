@@ -1,8 +1,11 @@
 package chi_gitanalyz.gitanalyzator.ui.project;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -11,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,7 +26,6 @@ import chi_gitanalyz.gitanalyzator.retrofit.model.data.Project;
 import chi_gitanalyz.gitanalyzator.retrofit.model.request.ProjectsRequest;
 import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
 import chi_gitanalyz.gitanalyzator.ui.CreateProjectActivity;
-import chi_gitanalyz.gitanalyzator.ui.FragmentDialog;
 import chi_gitanalyz.gitanalyzator.ui.UpdateProjectActivity;
 import chi_gitanalyz.gitanalyzator.ui.adapter.ProjectAdapter;
 import chi_gitanalyz.gitanalyzator.ui.adapter.ProjectNames;
@@ -45,29 +46,26 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private List<Project> projectList;
-    private LinearLayout view;
     private FragmentDialog fragmentDialog;
-    private AlertDialog.Builder ad;
     private android.app.AlertDialog dialog;
     private ProjectAdapter adapter;
+    private SharedPreferences sPref;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.project_layout);
-
         dialog = new SpotsDialog(this);
         dialog.show();
-
-        Intent intent = getIntent();
-        tokenId = intent.getStringExtra("tokenId");
-        managerId = intent.getStringExtra("managerId");
+        sPref = getSharedPreferences("TOKENS",MODE_PRIVATE);
+        tokenId = sPref.getString("tokenId", "tokenId");
+        managerId = sPref.getString("managerId", "managerId");
         recyclerView = (RecyclerView) findViewById(R.id.rec_view453);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ProjectAdapter(projectNames, this);
         recyclerView.setAdapter(adapter);
-
         fragmentDialog = new FragmentDialog();
         findViewById(R.id.but_all_dev).setOnClickListener((view) ->
                 {
@@ -80,10 +78,8 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
                 }
         );
 
-
         loadProjects();
     }
-
 
     private void loadProjects() {
         if (isNetworkConnected())
@@ -139,7 +135,7 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         projectList = projectsList.getProjects();
         for (int i = 0; i < projectList.size(); i++) {
             if (projectsList.getProjects().get(i).getStatus().equals("completed"))
-                projectNames.add(new ProjectNames(projectList.get(i).getName(), projectList.get(i).getHosting(),projectsList.getProjects().get(i).getId()));
+                projectNames.add(new ProjectNames(projectList.get(i).getName(), projectList.get(i).getHosting(), projectsList.getProjects().get(i).getId()));
         }
         adapter.notifyDataSetChanged();
         dialog.dismiss();
@@ -193,7 +189,7 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
     protected Dialog onCreateDialog(int id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Choose Action")
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton("Delete Project",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
@@ -233,12 +229,10 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         super.onRestart();
         Intent intent = new Intent(this, ProjectsActivity.class);
         overridePendingTransition(0, 0);//4
-        intent.putExtra("tokenId", tokenId);
-        intent.putExtra("managerId", managerId);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         finish();
         startActivity(intent);
     }
-}
+ }
 
 

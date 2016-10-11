@@ -4,6 +4,9 @@ package chi_gitanalyz.gitanalyzator.retrofit.model.data;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Commit {
 
     @SerializedName("git_id")
@@ -21,46 +24,16 @@ public class Commit {
     @SerializedName("branch_id")
     @Expose
     private Integer branchId;
-    @SerializedName("score")
+    @SerializedName("analytics")
     @Expose
-    private float score;
-    @SerializedName("duplications")
-    @Expose
-    private Integer duplications;
-    @SerializedName("smells")
-    @Expose
-    private Integer smells;
+    private List<Analytic> analytics = new ArrayList<Analytic>();
 
-    public String getGitId() {
-        return gitId;
+    public List<Analytic> getAnalytics() {
+        return analytics;
     }
 
-    public void setGitId(String gitId) {
-        this.gitId = gitId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Integer getDeveloperId() {
-        return developerId;
-    }
-
-    public void setDeveloperId(Integer developerId) {
-        this.developerId = developerId;
-    }
-
-    public Integer getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
+    public void setAnalytics(List<Analytic> analytics) {
+        this.analytics = analytics;
     }
 
     public Integer getBranchId() {
@@ -71,28 +44,35 @@ public class Commit {
         this.branchId = branchId;
     }
 
-    public float getScore() {
-        return score;
+    public Integer getDeveloperId() {
+        return developerId;
     }
 
-    public void setScore(float score) {
-        this.score = score;
+    public void setDeveloperId(Integer developerId) {
+        this.developerId = developerId;
     }
 
-    public Integer getDuplications() {
-        return duplications;
+    public String getGitId() {
+        return gitId;
     }
 
-    public void setDuplications(Integer duplications) {
-        this.duplications = duplications;
+    public void setGitId(String gitId) {
+        this.gitId = gitId;
     }
 
-    public Integer getSmells() {
-        return smells;
+    public Integer getProjectId() {
+        return projectId;
     }
 
-    public void setSmells(Integer smells) {
-        this.smells = smells;
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/liner_list">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="15dp">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameLeng"
+            android:layout_weight="1"
+            tools:textSize="24sp"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/procentLeng"
+            android:layout_alignBottom="@+id/nameLeng"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            tools:textSize="24sp"
+            android:textStyle="normal|bold" />
+    </RelativeLayout>
+
+</LinearLayout>

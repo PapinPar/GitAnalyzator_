@@ -46,7 +46,8 @@ public interface MyApi {
     Call<HomeResponse> getHome(@Path("id") String id, @Query("token") String token);
 
     @GET("projects/{id}/")
-    Call<ProjectsIdResponse> projectFilter(@Path("id") String id, @Query("token") String token, @Query("branch_id") Integer branch, @Query("developer_id") Integer dev);
+    Call<ProjectsIdResponse> projectFilter(@Path("id") String id, @Query("token") String token
+            , @Query("branch_id") Integer branch, @Query("developer_id") Integer dev,@Query("language") String language);
 
     @GET("projects")
     Call<ProjectsRequest> projectList(@Query("token") String token);

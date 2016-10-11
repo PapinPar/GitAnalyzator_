@@ -5,12 +5,15 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".core.GitAplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/my_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -24,11 +27,17 @@
 
         <activity android:name=".ui.SignUpActivity"></activity>
         <activity android:name=".ui.project.ProjectsActivity"></activity>
-        <activity android:name=".ui.project.GraphProjectActivity"
+        <activity
+            android:name=".ui.project.GraphProjectActivity"
             android:configChanges="orientation|screenSize"></activity>
         <activity android:name=".ui.developer.DevelopersActivity"></activity>
         <activity android:name=".ui.CreateProjectActivity"></activity>
         <activity android:name=".ui.UpdateProjectActivity"></activity>
-    </application>
+        <activity
+            android:name=".ui.project.PieProjectActivity"
+            android:configChanges="orientation|screenSize"></activity>
 
+        <service android:name=".service.MyService"></service>
+
+    </application>
 </manifest>

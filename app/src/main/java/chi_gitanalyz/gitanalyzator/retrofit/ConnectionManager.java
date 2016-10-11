@@ -143,12 +143,12 @@ public class ConnectionManager implements Net {
     }
 
     @Override
-    public void projectFilter(@NonNull String id, @NonNull String token, @NonNull Integer branch, @NonNull Integer dev) {
+    public void projectFilter(@NonNull String id, @NonNull String token,Integer branch,  Integer dev,@NonNull String language) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Response<ProjectsIdResponse> response = RestApiWrapper.getInstance().projectFilter(id, token, branch, dev);
+                    Response<ProjectsIdResponse> response = RestApiWrapper.getInstance().projectFilter(id, token, branch, dev,language);
                     if (response.isSuccessful()) {
                         ProjectsIdResponse result = response.body();
                         notifySuccessSubscribers(FILT_PROJECT, result);

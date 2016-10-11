@@ -121,8 +121,8 @@ public class RestApiWrapper {
         return response;
     }
 
-    public Response<ProjectsIdResponse> projectFilter(String id, String token, Integer branch, Integer dev) throws IOException {
-        Call<ProjectsIdResponse> idCall = api.projectFilter(id, token, branch, dev);
+    public Response<ProjectsIdResponse> projectFilter(String id, String token, Integer branch, Integer dev,String language) throws IOException {
+        Call<ProjectsIdResponse> idCall = api.projectFilter(id, token, branch, dev,language);
         Response<ProjectsIdResponse> response = idCall.execute();
         return response;
     }

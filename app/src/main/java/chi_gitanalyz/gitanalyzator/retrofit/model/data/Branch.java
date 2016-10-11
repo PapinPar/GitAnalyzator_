@@ -18,6 +18,9 @@ public class Branch {
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("commits")
+    @Expose
+    private List<Commit> commits = new ArrayList<Commit>();
 
     public String getStatus() {
         return status;
@@ -26,10 +29,6 @@ public class Branch {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    @SerializedName("commits")
-    @Expose
-    private List<Commit> commits = new ArrayList<Commit>();
 
     public String getName() {
         return name;

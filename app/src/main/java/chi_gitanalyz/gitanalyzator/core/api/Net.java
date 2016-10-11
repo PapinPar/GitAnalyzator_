@@ -52,7 +52,7 @@ public interface Net extends Subjcet<NetSubscriber> {
     //*************************************** PROJECTS ***************************************
     void projectHome(@NonNull String id, @NonNull String token);
 
-    void projectFilter(@NonNull String id, @NonNull String token, Integer branch, Integer dev);
+    void projectFilter(@NonNull String id, @NonNull String token, Integer branch, Integer dev,@NonNull String lenguage);
 
     void projectList(@NonNull String token);
 

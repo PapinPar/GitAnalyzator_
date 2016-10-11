@@ -17,7 +17,6 @@ import chi_gitanalyz.gitanalyzator.core.api.Net;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.HomeResponse;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.ProjectsIdResponse;
 import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
-import chi_gitanalyz.gitanalyzator.ui.FragmentDialog;
 import dmax.dialog.SpotsDialog;
 import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
@@ -60,6 +59,10 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     private ArrayList<String> filter;
     private FragmentDialog fragmentDialog;
     private Handler h;
+    private List<Line> lines;
+    private List<PointValue> values;
+
+    private Float HTML, CSS, JS, RB;
 
 
     @Override
@@ -114,18 +117,24 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     }
 
     @Override
-    public void getList(Integer branch, Integer dev, Integer filter) {
+    public void getList(Integer branch, Integer dev, Integer filter, Integer leng) {
         filter_id = filter;
+        String lenguage = "";
+        if (leng == 0)
+            lenguage = "Ruby";
+        else if (leng == 1)
+            lenguage = "JS";
+
         if (isNetworkConnected() == true) {
             dialog.show();
             if (branch == -5 && dev > 0)
-                app.getNet().projectFilter(projectId, tokenId, null, dev);
+                app.getNet().projectFilter(projectId, tokenId, null, dev, lenguage);
             else if (dev == -5 && branch > 0)
-                app.getNet().projectFilter(projectId, tokenId, branch, null);
+                app.getNet().projectFilter(projectId, tokenId, branch, null, lenguage);
             else if (branch == -5 && dev == -5)
-                app.getNet().projectFilter(projectId, tokenId, null, null);
+                app.getNet().projectFilter(projectId, tokenId, null, null, lenguage);
             else if (dev != -5 & branch != -5)
-                app.getNet().projectFilter(projectId, tokenId, branch, dev);
+                app.getNet().projectFilter(projectId, tokenId, branch, dev, lenguage);
         } else {
             Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
@@ -137,41 +146,15 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     private void generateData(ProjectsIdResponse netObjects) {
         Thread t = new Thread(new Runnable() {
             public void run() {
-                List<Line> lines = new ArrayList<Line>();
-                float max = 0;
-                List<PointValue> values;
-                int color = 0;
-                lines.clear();
-                for (int i = 0; i < netObjects.getBranches().size(); i++) {
-                    values = new ArrayList<PointValue>();
-                    for (int j = 0; j < netObjects.getBranches().get(i).getCommits().size() - 0; j++) {
-                        if (filter_id == 0)
-                            values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getScore()));
-                        if (filter_id == 1)
-                            values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getDuplications()));
-                        if (filter_id == 2)
-                            values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getSmells()));
-                        if (max < values.get(j).getY())
-                            max = values.get(j).getY();
-                    }
-                    Line line = new Line(values);
-                    if (color >= 8)
-                        color = 0;
-                    line.setColor(ColorsUtilis.COLORS[color]);
-                    color++;
-                    line.setCubic(isCubic);
-                    line.setFilled(isFilled);
-                    line.setHasLabels(hasLabels);
-                    line.setHasLabelsOnlyForSelected(hasLabelForSelected);
-                    line.setHasLines(hasLines);
-                    line.setHasPoints(hasPoints);
-                    lines.add(line);
-                }
 
-                values = new ArrayList<PointValue>();
-                values.add(new PointValue(1, max + 2));
-                Line line = new Line(values);
-                lines.add(line);
+                HTML = netObjects.getLanguagePercentage().getHtml();
+                CSS = netObjects.getLanguagePercentage().getCss();
+                JS = netObjects.getLanguagePercentage().getJs();
+                RB = netObjects.getLanguagePercentage().getRb();
+                lines = new ArrayList<Line>();
+                lines.clear();
+
+                fillData(netObjects);
 
                 data = new LineChartData(lines);
 
@@ -195,6 +178,41 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
             }
         });
         t.start();
+    }
+
+    private void fillData(ProjectsIdResponse netObjects) {
+        float max = 0;
+        int color = 0;
+        for (int i = 0; i < netObjects.getBranches().size(); i++) {
+
+            values = new ArrayList<PointValue>();
+            for (int j = 0; j < netObjects.getBranches().get(i).getCommits().size() - 0; j++) {
+                if (filter_id == 0)
+                    values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getAnalytics().get(0).getScore()));
+                if (filter_id == 1)
+                    values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getAnalytics().get(0).getDuplications()));
+                if (filter_id == 2)
+                    values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getAnalytics().get(0).getSmells()));
+                if (max < values.get(j).getY())
+                    max = values.get(j).getY();
+            }
+            Line line = new Line(values);
+            if (color >= 7)
+                color = 0;
+            line.setColor(ColorsUtilis.COLORS[color]);
+            color++;
+            line.setCubic(isCubic);
+            line.setFilled(isFilled);
+            line.setHasLabels(hasLabels);
+            line.setHasLabelsOnlyForSelected(hasLabelForSelected);
+            line.setHasLines(hasLines);
+            line.setHasPoints(hasPoints);
+            lines.add(line);
+        }
+        values = new ArrayList<PointValue>();
+        values.add(new PointValue(1, max + 2));
+        Line line = new Line(values);
+        lines.add(line);
     }
 
     private class ValueTouchListener implements LineChartOnValueSelectListener {
@@ -239,6 +257,14 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
                     Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
+                break;
+            case R.id.pieChart:
+                Intent intent = new Intent(this, PieProjectActivity.class);
+                intent.putExtra("HTML", HTML);
+                intent.putExtra("CSS", CSS);
+                intent.putExtra("RB", RB);
+                intent.putExtra("JS", JS);
+                startActivity(intent);
                 break;
             default:
                 break;

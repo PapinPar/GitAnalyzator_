@@ -2,4 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item  android:id="@+id/newFilter"
         android:title="Chose Filters" />
+    <item  android:id="@+id/pieChart"
+        android:title="Pie Chart" />
+
 </menu>
