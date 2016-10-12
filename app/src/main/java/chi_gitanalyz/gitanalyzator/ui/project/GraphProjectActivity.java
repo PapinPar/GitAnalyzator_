@@ -72,10 +72,8 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
         Intent intent = getIntent();
         tokenId = intent.getStringExtra("_TOKEN_");
         projectId = intent.getStringExtra("ID_PROJECT");
-
         fragmentDialog = new FragmentDialog();
         branch_id = -5;
-
         branch = new ArrayList<>();
         filter = new ArrayList<>();
 
@@ -277,4 +275,5 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
         Toast.makeText(this, "Check your internet conection please", Toast.LENGTH_SHORT).show();
         finish();
     }
+
 }

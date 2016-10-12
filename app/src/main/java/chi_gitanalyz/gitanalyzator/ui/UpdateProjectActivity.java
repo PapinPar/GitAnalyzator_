@@ -44,7 +44,7 @@ public class UpdateProjectActivity extends BaseActivity {
             sSsh = SSH.getText().toString();
             Project project = new Project();
             CreateProjectRequest create = new CreateProjectRequest();
-            project.setSsh(sSsh);
+            project.setLink(sSsh);
             project.setName(sName);
             create.setUser(project);
 

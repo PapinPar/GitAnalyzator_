@@ -47,7 +47,7 @@ public class CreateProjectActivity extends BaseActivity {
                     Project project = new Project();
                     CreateProjectRequest create = new CreateProjectRequest();
                     project.setUserId(Integer.valueOf(managerId));
-                    project.setSsh(sSsh);
+                    project.setLink(sSsh);
                     project.setName(sName);
                     create.setUser(project);
 

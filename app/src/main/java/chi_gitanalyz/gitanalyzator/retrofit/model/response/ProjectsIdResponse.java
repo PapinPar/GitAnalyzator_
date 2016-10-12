@@ -29,9 +29,9 @@ public class ProjectsIdResponse {
     @Expose
     private String secretToken;
 
-    @SerializedName("ssh")
+    @SerializedName("link")
     @Expose
-    private String ssh;
+    private String link;
 
     @SerializedName("webhook_name")
     @Expose
@@ -89,12 +89,13 @@ public class ProjectsIdResponse {
         this.secretToken = secretToken;
     }
 
-    public String getSsh() {
-        return ssh;
+
+    public String getLink() {
+        return link;
     }
 
-    public void setSsh(String ssh) {
-        this.ssh = ssh;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getWebhookName() {

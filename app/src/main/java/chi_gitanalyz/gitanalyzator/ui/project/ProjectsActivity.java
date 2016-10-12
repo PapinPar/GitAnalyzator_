@@ -156,6 +156,7 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
                 intent.putExtra("USER_ID", managerId);
                 intent.putExtra("token", tokenId);
                 startActivity(intent);
+                overridePendingTransition(R.anim.activity_down_up_close_enter,R.anim.activity_down_up_exit);
                 break;
             default:
                 break;
@@ -222,17 +223,16 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         updProject.putExtra("tokenId", tokenId);
         updProject.putExtra("projectId", projectId);
         startActivity(updProject);
+        overridePendingTransition(R.anim.activity_down_up_close_enter,R.anim.activity_down_up_exit);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Intent intent = new Intent(this, ProjectsActivity.class);
-        overridePendingTransition(0, 0);//4
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        startActivity(intent);
+        dialog.show();
+        loadProjects();
     }
- }
+
+}
 
 

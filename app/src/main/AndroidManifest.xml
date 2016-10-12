@@ -18,21 +18,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.MainActivity"
+            android:theme="@style/AnimationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.SignUpActivity"></activity>
-        <activity android:name=".ui.project.ProjectsActivity"></activity>
+        <activity android:name=".ui.SignUpActivity"
+            android:theme="@style/AnimationActivity"></activity>
+        <activity
+            android:name=".ui.project.ProjectsActivity"
+            android:theme="@style/AnimationActivity"></activity>
         <activity
             android:name=".ui.project.GraphProjectActivity"
-            android:configChanges="orientation|screenSize"></activity>
-        <activity android:name=".ui.developer.DevelopersActivity"></activity>
-        <activity android:name=".ui.CreateProjectActivity"></activity>
-        <activity android:name=".ui.UpdateProjectActivity"></activity>
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AnimationActivity"></activity>
+        <activity android:name=".ui.developer.DevelopersActivity"
+            android:theme="@style/AnimationActivity"></activity>
+        <activity android:name=".ui.CreateProjectActivity"
+            android:theme="@style/AnimationActivity"></activity>
+        <activity android:name=".ui.UpdateProjectActivity"
+            android:theme="@style/AnimationActivity"></activity>
         <activity
             android:name=".ui.project.PieProjectActivity"
             android:configChanges="orientation|screenSize"></activity>

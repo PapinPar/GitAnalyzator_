@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:padding="16dp">
@@ -8,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cv_dev"
-        >
+        app:cardBackgroundColor="@color/RED_BUTT_COLLOR">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,7 +21,8 @@
                 android:id="@+id/project_name"
                 tools:text="NAME"
                 android:textStyle="bold"
-                android:paddingBottom="30dp" />
+                android:paddingBottom="30dp"
+                android:textColor="@color/White" />
 
             <TextView
                 android:text="TextView"
@@ -30,7 +32,8 @@
                 android:layout_alignParentTop="false"
                 android:layout_alignParentRight="false"
                 android:layout_below="@+id/project_name"
-                android:paddingTop="5dp" />
+                android:paddingTop="5dp"
+                android:textColor="@color/White" />
 
             <TextView
                 android:text="TextView"
@@ -39,7 +42,8 @@
                 android:layout_above="@+id/Projects"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:id="@+id/dev_email" />
+                android:id="@+id/dev_email"
+                android:textColor="@color/White" />
 
             <TextView
                 android:text="TextView"
@@ -48,7 +52,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:id="@+id/comits_count" />
+                android:id="@+id/comits_count"
+                android:textColor="@color/White" />
 
         </RelativeLayout>
 

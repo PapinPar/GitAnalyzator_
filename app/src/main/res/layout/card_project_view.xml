@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    >
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cv"
+        app:cardBackgroundColor="#d7ded9"
         >
 
         <TextView
@@ -16,7 +19,8 @@
             android:id="@+id/project_name"
             tools:text="TEXT"
             android:padding="15dp"
-            android:layout_gravity="left|center_vertical|center_horizontal" />
+            android:layout_gravity="left|center_vertical|center_horizontal"
+            android:textColor="@color/RED_BUTT_COLLOR" />
 
         <TextView
             android:text="Host"
@@ -24,6 +28,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/project_host"
             android:layout_gravity="right|center_vertical|center_horizontal"
-            android:paddingRight="15dp" />
+            android:paddingRight="15dp"
+            android:textColor="@color/RED_BUTT_COLLOR" />
     </android.support.v7.widget.CardView>
 </LinearLayout>
