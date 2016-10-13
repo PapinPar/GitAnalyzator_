@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.MainActivity"
+        <activity
+            android:name=".ui.Splach"
             android:theme="@style/AnimationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +27,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.SignUpActivity"
+        <activity
+            android:name=".ui.MainActivity"
+            android:theme="@style/AnimationActivity"></activity>
+
+        <activity
+            android:name=".ui.SignUpActivity"
             android:theme="@style/AnimationActivity"></activity>
         <activity
             android:name=".ui.project.ProjectsActivity"
@@ -35,11 +41,14 @@
             android:name=".ui.project.GraphProjectActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AnimationActivity"></activity>
-        <activity android:name=".ui.developer.DevelopersActivity"
+        <activity
+            android:name=".ui.developer.DevelopersActivity"
             android:theme="@style/AnimationActivity"></activity>
-        <activity android:name=".ui.CreateProjectActivity"
+        <activity
+            android:name=".ui.CreateProjectActivity"
             android:theme="@style/AnimationActivity"></activity>
-        <activity android:name=".ui.UpdateProjectActivity"
+        <activity
+            android:name=".ui.UpdateProjectActivity"
             android:theme="@style/AnimationActivity"></activity>
         <activity
             android:name=".ui.project.PieProjectActivity"

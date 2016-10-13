@@ -44,6 +44,7 @@ android {
         compile 'com.android.support:design:23.0.1'
         //PROGRESS
         compile 'com.github.d-max:spots-dialog:0.7@aar'
+        compile 'com.roger.catloadinglibrary:catloadinglibrary:1.0.1'
         //GRAPH
         compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
 

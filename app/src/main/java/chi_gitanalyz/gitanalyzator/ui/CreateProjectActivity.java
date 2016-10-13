@@ -9,8 +9,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import chi_gitanalyz.gitanalyzator.R;
 import chi_gitanalyz.gitanalyzator.core.api.Net;
-import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.Project;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
 import chi_gitanalyz.gitanalyzator.service.MyService;
 
 /**
@@ -74,7 +74,8 @@ public class CreateProjectActivity extends BaseActivity {
     public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
             case Net.CREATE_PROJECT:
-                Toast.makeText(this, "Chech our internet connection and input data", Toast.LENGTH_SHORT).show();
+                String resultStr = NetObjects.toString().substring(NetObjects.toString().indexOf('[') + 2, NetObjects.toString().indexOf(']')-1);
+                Toast.makeText(this, resultStr, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

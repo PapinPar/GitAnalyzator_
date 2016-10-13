@@ -1,10 +1,8 @@
 package chi_gitanalyz.gitanalyzator.ui;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -39,13 +37,12 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         token = "NULL";
         dialog = new SpotsDialog(this);
-        dialog.show();
-        app.getDb().loadUser();
         setContentView(R.layout.activity_main);
         etEmail = (MaterialEditText) findViewById(R.id.email);
         etPassword = (MaterialEditText) findViewById(R.id.password);
         findViewById(R.id.butSignIn).setOnClickListener((view) ->
                 {
+
                     email = etEmail.getText().toString();
                     password = etPassword.getText().toString();
                     User user = new User();
@@ -53,8 +50,10 @@ public class MainActivity extends BaseActivity {
                     user.setEmail(email);
                     user.setPassword(password);
                     request.setUser(user);
-                    if (isNetworkConnected())
+                    if (isNetworkConnected()){
+                        dialog.show();
                         app.getNet().signIN(request);
+                    }
                     else
                         Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
                 }
@@ -77,23 +76,7 @@ public class MainActivity extends BaseActivity {
             case Db.USER_DELETE:
                 Log.d("DB", "user deleted");
                 break;
-            case Db.USER_LOAD:
-                loaded((Manager) dbObject);
-                break;
         }
-    }
-
-    private void loaded(Manager dbObject) {
-        if (dbObject != null) {
-            token = dbObject.getToken().toString();
-            if (isNetworkConnected()) {
-                app.getNet().validateToken(dbObject.getToken().toString());
-            } else {
-                Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        } else
-            dialog.dismiss();
     }
 
 
@@ -111,39 +94,21 @@ public class MainActivity extends BaseActivity {
             case Net.Sign_IN:
                 InSuccess((InResponse) NetObjects);
                 break;
-            case Net.VALIDATE_TOKEN:
-                Success((User) NetObjects);
-                break;
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void Success(User netObjects) {
-        Manager manager = new Manager();
-        manager.setToken(token);
-        app.getDb().saveUser(manager);
-        Intent intent = new Intent(this, ProjectsActivity.class);
-        sPref = getSharedPreferences("TOKENS",MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putString("tokenId", token);
-        ed.putString("managerId", netObjects.getId().toString());
-        ed.commit();
-        dialog.dismiss();
-        startActivity(intent);
     }
 
     @Override
     public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
             case Net.Sign_IN:
+                dialog.dismiss();
                 Toast.makeText(this, "Chech our internet connection and input data", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
-    //      IN
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void InSuccess(InResponse response) {
+        dialog.dismiss();
         Log.d("token", "" + response.getToken());
         Log.d("token", "" + response.getUserId());
         Manager manager = new Manager();

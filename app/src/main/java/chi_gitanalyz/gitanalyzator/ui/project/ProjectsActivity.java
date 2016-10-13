@@ -1,13 +1,17 @@
 package chi_gitanalyz.gitanalyzator.ui.project;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +54,7 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
     private android.app.AlertDialog dialog;
     private ProjectAdapter adapter;
     private SharedPreferences sPref;
+    private boolean permision;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -58,7 +63,7 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         setContentView(R.layout.project_layout);
         dialog = new SpotsDialog(this);
         dialog.show();
-        sPref = getSharedPreferences("TOKENS",MODE_PRIVATE);
+        sPref = getSharedPreferences("TOKENS", MODE_PRIVATE);
         tokenId = sPref.getString("tokenId", "tokenId");
         managerId = sPref.getString("managerId", "managerId");
         recyclerView = (RecyclerView) findViewById(R.id.rec_view453);
@@ -139,8 +144,23 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         }
         adapter.notifyDataSetChanged();
         dialog.dismiss();
+        checkPirmission();
     }
 
+    private void checkPirmission()
+    {
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE)
+              == PackageManager.PERMISSION_GRANTED)
+      {
+          permision= true;
+      }
+      else
+      {
+      ActivityCompat.requestPermissions(this,
+              new String[]{Manifest.permission.VIBRATE},
+              21);
+      }
+    }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
@@ -156,7 +176,7 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
                 intent.putExtra("USER_ID", managerId);
                 intent.putExtra("token", tokenId);
                 startActivity(intent);
-                overridePendingTransition(R.anim.activity_down_up_close_enter,R.anim.activity_down_up_exit);
+                overridePendingTransition(R.anim.activity_down_up_close_enter, R.anim.activity_down_up_exit);
                 break;
             default:
                 break;
@@ -223,7 +243,7 @@ public class ProjectsActivity extends BaseActivity implements ProjectAdapter.Nam
         updProject.putExtra("tokenId", tokenId);
         updProject.putExtra("projectId", projectId);
         startActivity(updProject);
-        overridePendingTransition(R.anim.activity_down_up_close_enter,R.anim.activity_down_up_exit);
+        overridePendingTransition(R.anim.activity_down_up_close_enter, R.anim.activity_down_up_exit);
     }
 
     @Override

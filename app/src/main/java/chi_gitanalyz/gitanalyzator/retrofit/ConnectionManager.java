@@ -193,8 +193,7 @@ public class ConnectionManager implements Net {
                     if (response.isSuccessful()) {
                         notifySuccessSubscribers(CREATE_PROJECT, response);
                     } else {
-                        String message = response.raw().message().toString();
-                        notifyErrorSubscribers(CREATE_PROJECT, message);
+                        notifyErrorSubscribers(CREATE_PROJECT, response.errorBody().string());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

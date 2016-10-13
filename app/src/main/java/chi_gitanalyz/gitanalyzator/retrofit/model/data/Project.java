@@ -85,7 +85,7 @@ public class Project {
         return link;
     }
 
-    public void setLink(String ling) {
+    public void setLink(String link) {
         this.link = link;
     }
 
