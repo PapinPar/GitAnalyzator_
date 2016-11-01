@@ -13,6 +13,7 @@ import org.eazegraph.lib.models.PieModel;
 import java.util.ArrayList;
 
 import chi_gitanalyz.gitanalyzator.R;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Language;
 import chi_gitanalyz.gitanalyzator.ui.adapter.MyPieModel;
 import chi_gitanalyz.gitanalyzator.ui.adapter.PieAdapter;
 import lecho.lib.hellocharts.model.PieChartData;
@@ -24,9 +25,8 @@ import lecho.lib.hellocharts.view.PieChartView;
 
 public class PieProjectActivity extends Activity {
 
-    private Float HTML, CSS, JS, RB;
-
     private ArrayList<MyPieModel> product;
+    private ArrayList<Language> languageList;
 
     private PieChartView chart;
     private ListView listView;
@@ -38,11 +38,8 @@ public class PieProjectActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pie_chart_language);
         Intent intent = getIntent();
-        HTML = intent.getFloatExtra("HTML", 0);
-        CSS = intent.getFloatExtra("CSS", 0);
-        JS = intent.getFloatExtra("JS", 0);
-        RB = intent.getFloatExtra("RB", 0);
 
+        languageList = (ArrayList) getIntent().getSerializableExtra("LIST");
         product = new ArrayList<MyPieModel>();
         adapter = new PieAdapter(this, product);
         listView = (ListView) findViewById(R.id.pieList);
@@ -65,15 +62,20 @@ public class PieProjectActivity extends Activity {
             }
         });
 
-        mPieChart.addPieSlice(new PieModel("HTNL", HTML, ColorsUtilis.COLOR_Cyan));
-        mPieChart.addPieSlice(new PieModel("JS", JS, ColorsUtilis.COLOR_LightSlateBlue));
-        mPieChart.addPieSlice(new PieModel("CSS", CSS, ColorsUtilis.COLOR_DeepPink));
-        mPieChart.addPieSlice(new PieModel("RUBY", RB, ColorsUtilis.COLOR_DarkGreen));
+        for(int i = 0 ; i<languageList.size();i++)
+        {
+            mPieChart.addPieSlice(new PieModel(languageList.get(i).getName(), languageList.get(i).getPercentage(), ColorsUtilis.COLORS[i]));
+            product.add(new MyPieModel(ColorsUtilis.COLORS[i],languageList.get(i).getName(),languageList.get(i).getPercentage()));
+        }
+      // mPieChart.addPieSlice(new PieModel("HTNL", HTML, ColorsUtilis.COLOR_Cyan));
+      // mPieChart.addPieSlice(new PieModel("JS", JS, ColorsUtilis.COLOR_LightSlateBlue));
+      // mPieChart.addPieSlice(new PieModel("CSS", CSS, ColorsUtilis.COLOR_DeepPink));
+      // mPieChart.addPieSlice(new PieModel("RUBY", RB, ColorsUtilis.COLOR_DarkGreen));
 
-        product.add(new MyPieModel(ColorsUtilis.COLOR_Cyan,"HTML",HTML));
-        product.add(new MyPieModel(ColorsUtilis.COLOR_LightSlateBlue,"JS",JS));
-        product.add(new MyPieModel(ColorsUtilis.COLOR_DeepPink,"CSS",CSS));
-        product.add(new MyPieModel(ColorsUtilis.COLOR_DarkGreen,"RUBY",RB));
+      // product.add(new MyPieModel(ColorsUtilis.COLOR_Cyan,"HTML",HTML));
+      // product.add(new MyPieModel(ColorsUtilis.COLOR_LightSlateBlue,"JS",JS));
+      // product.add(new MyPieModel(ColorsUtilis.COLOR_DeepPink,"CSS",CSS));
+      // product.add(new MyPieModel(ColorsUtilis.COLOR_DarkGreen,"RUBY",RB));
 
         adapter.notifyDataSetChanged();
         mPieChart.startAnimation();

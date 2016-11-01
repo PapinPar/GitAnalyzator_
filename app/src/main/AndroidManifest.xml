@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.Splach"
+            android:name=".ui.SplachActivity"
             android:theme="@style/AnimationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

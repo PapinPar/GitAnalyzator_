@@ -9,6 +9,7 @@ import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.Branch;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.Developer;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Language;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.LanguagePercentage;
 
 public class ProjectsIdResponse {
@@ -55,6 +56,17 @@ public class ProjectsIdResponse {
     @SerializedName("language_percentage")
     @Expose
     private LanguagePercentage languagePercentage;
+    @SerializedName("languages")
+    @Expose
+    private ArrayList<Language> languages = new ArrayList<Language>();
+
+    public ArrayList<Language> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(ArrayList<Language> languages) {
+        this.languages = languages;
+    }
 
     public Integer getId() {
         return id;

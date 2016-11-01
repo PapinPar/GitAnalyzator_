@@ -3,6 +3,7 @@ package chi_gitanalyz.gitanalyzator.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.roger.catloadinglibrary.CatLoadingView;
@@ -18,7 +19,7 @@ import chi_gitanalyz.gitanalyzator.ui.project.ProjectsActivity;
  * Created by Papin on 13.10.2016.
  */
 
-public class Splach extends BaseActivity {
+public class SplachActivity extends BaseActivity {
 
     private String token;
     private SharedPreferences sPref;
@@ -55,7 +56,7 @@ public class Splach extends BaseActivity {
         manager.setToken(token);
         app.getDb().saveUser(manager);
         Intent intent = new Intent(this, ProjectsActivity.class);
-        sPref = getSharedPreferences("TOKENS",MODE_PRIVATE);
+        sPref = getSharedPreferences("TOKENS", MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString("tokenId", token);
         ed.putString("managerId", netObjects.getId().toString());
@@ -76,6 +77,7 @@ public class Splach extends BaseActivity {
     private void loaded(Manager dbObject) {
         if (dbObject != null) {
             token = dbObject.getToken().toString();
+            Log.d("PAPIN_TAG", "token" + token);
             if (isNetworkConnected()) {
                 app.getNet().validateToken(dbObject.getToken().toString());
             } else {
@@ -83,9 +85,10 @@ public class Splach extends BaseActivity {
                 startActivity(startMain);
                 Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Intent startMain = new Intent(this, MainActivity.class);
+            startActivity(startMain);
         }
-        else{ Intent startMain = new Intent(this, MainActivity.class);
-            startActivity(startMain);}
 
     }
 

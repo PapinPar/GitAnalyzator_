@@ -42,6 +42,8 @@
             android:gravity="center_horizontal"
             app:met_floatingLabelTextSize="18dp"
             app:met_textColor="@color/White"
+            app:met_helperText="only HTTPS"
+            app:met_helperTextColor="@color/COLOR_Green"
             app:met_textColorHint="@color/White"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/White"

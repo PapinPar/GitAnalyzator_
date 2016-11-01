@@ -14,6 +14,7 @@ import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.R;
 import chi_gitanalyz.gitanalyzator.core.api.Net;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Language;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.HomeResponse;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.ProjectsIdResponse;
 import chi_gitanalyz.gitanalyzator.ui.BaseActivity;
@@ -24,6 +25,7 @@ import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.ValueShape;
+import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 
 import static android.provider.Telephony.TextBasedSmsColumns.STATUS_COMPLETE;
@@ -53,7 +55,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     private ValueShape shape = ValueShape.CIRCLE;
     private boolean isFilled = false;
     private boolean hasLabels = true;
-    private boolean isCubic = true;
+    private boolean isCubic = false;  //планость
     private boolean hasLabelForSelected = true;
     private ArrayList<String> branch;
     private ArrayList<String> filter;
@@ -61,8 +63,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     private Handler h;
     private List<Line> lines;
     private List<PointValue> values;
-
-    private Float HTML, CSS, JS, RB;
+    private ArrayList<Language> languageList;
 
 
     @Override
@@ -143,11 +144,11 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     private void generateData(ProjectsIdResponse netObjects) {
         Thread t = new Thread(new Runnable() {
             public void run() {
-
-                HTML = netObjects.getLanguagePercentage().getHtml();
-                CSS = netObjects.getLanguagePercentage().getCss();
-                JS = netObjects.getLanguagePercentage().getJs();
-                RB = netObjects.getLanguagePercentage().getRb();
+                languageList = netObjects.getLanguages();
+                // RB = netObjects.getLanguages().get(0).getPercentage();
+                // JS = netObjects.getLanguages().get(1).getPercentage();
+                // CSS = netObjects.getLanguages().get(2).getPercentage();
+                // HTML = netObjects.getLanguages().get(3).getPercentage();
                 lines = new ArrayList<Line>();
                 lines.clear();
 
@@ -169,8 +170,16 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
                     data.setAxisYLeft(null);
                 }
 
-                data.setBaseValue(Float.POSITIVE_INFINITY);
+                data.setBaseValue(Float.MAX_EXPONENT);
+
                 chart.setLineChartData(data);
+                final Viewport v = new Viewport(chart.getMaximumViewport());
+                v.top = v.top + 1;
+                v.left = v.left - 1;
+                v.right = v.right + 1;
+                chart.setMaximumViewport(v);
+                chart.setCurrentViewport(v);
+
                 h.sendEmptyMessage(STATUS_COMPLETE);
             }
         });
@@ -178,20 +187,16 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     }
 
     private void fillData(ProjectsIdResponse netObjects) {
-        float max = 0;
         int color = 0;
         for (int i = 0; i < netObjects.getBranches().size(); i++) {
-
             values = new ArrayList<PointValue>();
-            for (int j = 0; j < netObjects.getBranches().get(i).getCommits().size() - 0; j++) {
+            for (int j = 0; j < netObjects.getBranches().get(i).getCommits().size(); j++) {
                 if (filter_id == 0)
                     values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getAnalytics().get(0).getScore()));
                 if (filter_id == 1)
                     values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getAnalytics().get(0).getDuplications()));
                 if (filter_id == 2)
                     values.add(new PointValue(j, netObjects.getBranches().get(i).getCommits().get(j).getAnalytics().get(0).getSmells()));
-                if (max < values.get(j).getY())
-                    max = values.get(j).getY();
             }
             Line line = new Line(values);
             if (color >= 7)
@@ -206,10 +211,6 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
             line.setHasPoints(hasPoints);
             lines.add(line);
         }
-        values = new ArrayList<PointValue>();
-        values.add(new PointValue(1, max + 2));
-        Line line = new Line(values);
-        lines.add(line);
     }
 
     private class ValueTouchListener implements LineChartOnValueSelectListener {
@@ -257,10 +258,7 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
                 break;
             case R.id.pieChart:
                 Intent intent = new Intent(this, PieProjectActivity.class);
-                intent.putExtra("HTML", HTML);
-                intent.putExtra("CSS", CSS);
-                intent.putExtra("RB", RB);
-                intent.putExtra("JS", JS);
+                intent.putExtra("LIST", languageList);
                 startActivity(intent);
                 break;
             default:

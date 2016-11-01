@@ -40,6 +40,17 @@ public class Project {
     @SerializedName("hosting")
     @Expose
     private String hosting;
+    @SerializedName("languages")
+    @Expose
+    private List<Language> languages = new ArrayList<Language>();
+
+    public List<Language> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<Language> languages) {
+        this.languages = languages;
+    }
 
     public String getStatus() {
         return status;

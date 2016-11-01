@@ -26,6 +26,7 @@ public class MainActivity extends BaseActivity {
     private String password;
     private MaterialEditText etEmail;
     private MaterialEditText etPassword;
+    private String myToken,myIdManager;
 
     private String token;
 
@@ -82,6 +83,13 @@ public class MainActivity extends BaseActivity {
 
     private void dbSaveUser() {
         Log.d("DB", "user saved");
+        Intent intent = new Intent(this, ProjectsActivity.class);
+        sPref = getSharedPreferences("TOKENS",MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putString("tokenId", myToken);
+        ed.putString("managerId", myIdManager);
+        ed.commit();
+        startActivity(intent);
     }
 
     @Override
@@ -109,18 +117,12 @@ public class MainActivity extends BaseActivity {
 
     private void InSuccess(InResponse response) {
         dialog.dismiss();
-        Log.d("token", "" + response.getToken());
-        Log.d("token", "" + response.getUserId());
         Manager manager = new Manager();
-        manager.setToken(response.getToken());
+        manager.setToken(response.getToken().toString());
+        Log.d("PAPIN_TAG","token"+response.getToken().length());
+        myToken = response.getToken().toString();
+        myIdManager = response.getUserId().toString();
         app.getDb().saveUser(manager);
-        Intent intent = new Intent(this, ProjectsActivity.class);
-        sPref = getSharedPreferences("TOKENS",MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putString("tokenId", response.getToken());
-        ed.putString("managerId", response.getUserId().toString());
-        ed.commit();
-        startActivity(intent);
     }
 
 }

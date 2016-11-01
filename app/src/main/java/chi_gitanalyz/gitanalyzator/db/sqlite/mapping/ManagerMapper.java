@@ -26,7 +26,7 @@ public class ManagerMapper
 
     @Nullable
     public static Manager parse(Cursor cursor) {
-        if(cursor.moveToFirst()) {
+        if(cursor.moveToLast()) {
             Manager user = new Manager();
             user.setObjectId(cursor.getString(cursor.getColumnIndex(ManagerEntity.OBJECT_ID)));
             user.setToken(cursor.getString(cursor.getColumnIndex(ManagerEntity.TOKEN)));
