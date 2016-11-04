@@ -11,7 +11,6 @@ import chi_gitanalyz.gitanalyzator.R;
 import chi_gitanalyz.gitanalyzator.core.api.Net;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.Project;
 import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
-import chi_gitanalyz.gitanalyzator.service.MyService;
 
 /**
  * Created by Papin on 30.09.2016.
@@ -64,7 +63,6 @@ public class CreateProjectActivity extends BaseActivity {
     public void onNetRequestDone(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
             case Net.CREATE_PROJECT:
-                startService(new Intent(this, MyService.class));
                 finish();
                 break;
         }

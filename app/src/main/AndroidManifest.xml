@@ -53,6 +53,11 @@
         <activity
             android:name=".ui.project.PieProjectActivity"
             android:configChanges="orientation|screenSize"></activity>
+        <activity
+            android:name=".ui.ChoseAnalyzator"
+            android:label="Chose Analyzator"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="orientation|screenSize"></activity>
 
         <service android:name=".service.MyService"></service>
 

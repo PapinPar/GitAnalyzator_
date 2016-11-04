@@ -22,6 +22,7 @@ import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionStateChange;
 
 import chi_gitanalyz.gitanalyzator.R;
+import chi_gitanalyz.gitanalyzator.ui.ChoseAnalyzator;
 import chi_gitanalyz.gitanalyzator.ui.project.ProjectsActivity;
 
 /**
@@ -78,12 +79,17 @@ public class MyService extends Service {
             @Override
             public void onEvent(String channelName, String eventName, final String data) {
 
+
                 Thread t = new Thread(new Runnable() {
                     public void run() {
                         Gson gson = new Gson();
                         message = gson.fromJson(data, MessageNotif.class);
                         Log.d("asd", "" + message.getStatus());
-                        sendNotif();
+                        if(message.getStatus().equals("selecting_analyzers")){
+                            sad();
+                        }
+                        else
+                            sendNotif();
                     }
                 });
                 t.start();
@@ -101,6 +107,12 @@ public class MyService extends Service {
                 Log.d("error", "error" + s);
             }
         });
+    }
+
+    private void sad() {
+        Intent choseAnalyz = new Intent(this, ChoseAnalyzator.class);
+        choseAnalyz.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(choseAnalyz);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -134,9 +146,5 @@ public class MyService extends Service {
         notification.defaults |= Notification.DEFAULT_LIGHTS;
 
         notificationManager.notify(101, notification);
-        if (message.getStatus().equals("completed")) {
-            stopSelf();
-            onDestroy();
-        }
     }
 }

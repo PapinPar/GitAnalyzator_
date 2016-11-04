@@ -13,6 +13,7 @@ import chi_gitanalyz.gitanalyzator.core.api.Db;
 import chi_gitanalyz.gitanalyzator.core.api.Net;
 import chi_gitanalyz.gitanalyzator.db.sqlite.model.Manager;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
+import chi_gitanalyz.gitanalyzator.service.MyService;
 import chi_gitanalyz.gitanalyzator.ui.project.ProjectsActivity;
 
 /**
@@ -24,6 +25,7 @@ public class SplachActivity extends BaseActivity {
     private String token;
     private SharedPreferences sPref;
     CatLoadingView mView;
+    private int value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,23 @@ public class SplachActivity extends BaseActivity {
         mView.setCancelable(false);
         mView.show(getSupportFragmentManager(), "");
         app.getDb().loadUser();
+        firstLaunsh();
+    }
+
+    private void firstLaunsh() {
+      //  sPref = getSharedPreferences("LAUNSH", MODE_PRIVATE);
+      //  SharedPreferences.Editor ed = sPref.edit();
+//
+      //  value = sPref.getInt("value", 0);
+      //  ed.putInt("value", 1);
+      //  if (value == 0) {
+      //      ed.putInt("value", 1);
+      //      ed.commit();
+      //  }
+      //  if (value == 1) {
+            Log.d("PAPIN_TAG","Servise started");
+            startService(new Intent(this, MyService.class));
+      //  }
     }
 
     @Override
