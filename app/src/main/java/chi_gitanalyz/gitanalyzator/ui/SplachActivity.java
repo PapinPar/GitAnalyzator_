@@ -36,6 +36,17 @@ public class SplachActivity extends BaseActivity {
     }
 
     @Override
+    public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
+        super.onNetRequestFail(evetId, NetObjects);
+        switch (evetId) {
+            case Net.VALIDATE_TOKEN:
+                Intent startMain = new Intent(this, MainActivity.class);
+                startActivity(startMain);
+                break;
+        }
+    }
+
+    @Override
     public boolean isNetworkConnected() {
         return super.isNetworkConnected();
     }

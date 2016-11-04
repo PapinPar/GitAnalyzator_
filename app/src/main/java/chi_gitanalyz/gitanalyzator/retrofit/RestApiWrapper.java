@@ -5,15 +5,15 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.InRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.ProjectsRequest;
+import chi_gitanalyz.gitanalyzator.retrofit.model.request.UpRequset;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.CurrentDevResponse;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.DevelopersResponse;
-import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
-import chi_gitanalyz.gitanalyzator.retrofit.model.request.ProjectsRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.HomeResponse;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.ProjectsIdResponse;
-import chi_gitanalyz.gitanalyzator.retrofit.model.request.InRequest;
-import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
-import chi_gitanalyz.gitanalyzator.retrofit.model.request.UpRequset;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -41,7 +41,9 @@ public class RestApiWrapper {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
 
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
