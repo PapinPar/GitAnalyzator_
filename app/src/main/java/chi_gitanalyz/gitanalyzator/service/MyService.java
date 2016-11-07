@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
@@ -36,6 +37,9 @@ public class MyService extends Service {
     private NotificationManager manager;
     private Notification myNotication;
     private String channelName, eventName, key;
+    private PusherOptions options;
+    private SharedPreferences sPref;
+    private String projectName;
 
     @Nullable
     @Override
@@ -52,7 +56,7 @@ public class MyService extends Service {
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("sd", "onStartCommand");
-        someTask();
+        pusher();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -67,9 +71,8 @@ public class MyService extends Service {
         return null;
     }
 
-    void someTask() {
-
-        PusherOptions options = new PusherOptions();
+    void pusher() {
+        options = new PusherOptions();
         options.setCluster("eu");
 
         pusher = new Pusher(key, options);
@@ -78,17 +81,18 @@ public class MyService extends Service {
         channel.bind(eventName, new SubscriptionEventListener() {
             @Override
             public void onEvent(String channelName, String eventName, final String data) {
-
+                sPref = getSharedPreferences("Names", MODE_PRIVATE);
+                projectName = sPref.getString("Project_name", "0");
 
                 Thread t = new Thread(new Runnable() {
                     public void run() {
                         Gson gson = new Gson();
                         message = gson.fromJson(data, MessageNotif.class);
                         Log.d("asd", "" + message.getStatus());
-                        if(message.getStatus().equals("selecting_analyzers")){
-                            sad();
-                        }
-                        else
+                        if (message.getStatus().equals("selecting_analyzers")) {
+                            if (projectName.equals(message.getProject_name()))
+                                startActivity(message.getProject_id());
+                        } else
                             sendNotif();
                     }
                 });
@@ -99,7 +103,7 @@ public class MyService extends Service {
         pusher.connect(new ConnectionEventListener() {
             @Override
             public void onConnectionStateChange(ConnectionStateChange connectionStateChange) {
-                Log.d("asd", "asd");
+                Log.d("PAPIN_TAG", "Pusher Conected");
             }
 
             @Override
@@ -109,9 +113,10 @@ public class MyService extends Service {
         });
     }
 
-    private void sad() {
+    private void startActivity(String id) {
         Intent choseAnalyz = new Intent(this, ChoseAnalyzator.class);
         choseAnalyz.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        choseAnalyz.putExtra("myID", id);
         startActivity(choseAnalyz);
     }
 

@@ -35,7 +35,7 @@ import static android.provider.Telephony.TextBasedSmsColumns.STATUS_NONE;
  * Created by Papin on 27.09.2016.
  */
 
-public class GraphProjectActivity extends BaseActivity implements FragmentDialog.GetOnspinListner {
+public class GraphProjectActivity extends BaseActivity implements FragmentDialog.GetOnSpinListner {
 
     private String tokenId;
     private String projectId;
@@ -116,24 +116,18 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
     }
 
     @Override
-    public void getList(Integer branch, Integer dev, Integer filter, Integer leng) {
+    public void getList(Integer branch, Integer dev, Integer filter, String leng) {
         filter_id = filter;
-        String lenguage = "";
-        if (leng == 0)
-            lenguage = "Ruby";
-        else if (leng == 1)
-            lenguage = "JS";
-
         if (isNetworkConnected() == true) {
             dialog.show();
             if (branch == -5 && dev > 0)
-                app.getNet().projectFilter(projectId, tokenId, null, dev, lenguage);
+                app.getNet().projectFilter(projectId, tokenId, null, dev, leng);
             else if (dev == -5 && branch > 0)
-                app.getNet().projectFilter(projectId, tokenId, branch, null, lenguage);
+                app.getNet().projectFilter(projectId, tokenId, branch, null, leng);
             else if (branch == -5 && dev == -5)
-                app.getNet().projectFilter(projectId, tokenId, null, null, lenguage);
+                app.getNet().projectFilter(projectId, tokenId, null, null, leng);
             else if (dev != -5 & branch != -5)
-                app.getNet().projectFilter(projectId, tokenId, branch, dev, lenguage);
+                app.getNet().projectFilter(projectId, tokenId, branch, dev, leng);
         } else {
             Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
@@ -145,10 +139,6 @@ public class GraphProjectActivity extends BaseActivity implements FragmentDialog
         Thread t = new Thread(new Runnable() {
             public void run() {
                 languageList = netObjects.getLanguages();
-                // RB = netObjects.getLanguages().get(0).getPercentage();
-                // JS = netObjects.getLanguages().get(1).getPercentage();
-                // CSS = netObjects.getLanguages().get(2).getPercentage();
-                // HTML = netObjects.getLanguages().get(3).getPercentage();
                 lines = new ArrayList<Line>();
                 lines.clear();
 

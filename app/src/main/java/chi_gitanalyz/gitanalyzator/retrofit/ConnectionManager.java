@@ -11,6 +11,7 @@ import java.util.concurrent.Executor;
 
 import chi_gitanalyz.gitanalyzator.core.api.Net;
 import chi_gitanalyz.gitanalyzator.core.observer.NetSubscriber;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Project;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
 import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.request.InRequest;
@@ -233,6 +234,24 @@ public class ConnectionManager implements Net {
                     } else {
                         String message = response.raw().message();
                         notifyErrorSubscribers(UPD_PROJECT, message);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void selectAnalyzator(@NonNull Integer id, String languages, @NonNull String token) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<Project> response = RestApiWrapper.getInstance().getAnalyzator(id,languages,token);
+                    if(response.isSuccessful()){
+                        Project project = response.body();
+                        notifySuccessSubscribers(SELECT_ANALYZATOR,project);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

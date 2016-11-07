@@ -9,6 +9,7 @@ import java.util.List;
 
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.BranchHome;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.DeveloperHome;
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Language;
 
 public class HomeResponse {
 
@@ -36,6 +37,17 @@ public class HomeResponse {
     @SerializedName("developers")
     @Expose
     private List<DeveloperHome> developers = new ArrayList<DeveloperHome>();
+    @SerializedName("languages")
+    @Expose
+    private List<Language> languages = new ArrayList<Language>();
+
+    public List<Language> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<Language> languages) {
+        this.languages = languages;
+    }
 
     public Integer getId() {
         return id;

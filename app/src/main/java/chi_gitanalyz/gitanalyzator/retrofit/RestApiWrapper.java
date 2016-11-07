@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Project;
 import chi_gitanalyz.gitanalyzator.retrofit.model.data.User;
 import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
 import chi_gitanalyz.gitanalyzator.retrofit.model.request.InRequest;
@@ -138,6 +139,12 @@ public class RestApiWrapper {
     public Response<CreateProjectRequest> updateProject(String id, CreateProjectRequest projectsID, String token)throws IOException {
         Call<CreateProjectRequest> projectsIDCall = api.updateProject(id, projectsID, token);
         Response<CreateProjectRequest> response = projectsIDCall.execute();
+        return response;
+    }
+
+    public Response<Project> getAnalyzator(Integer id, String languages, String token) throws IOException {
+        Call<Project> projectCall = api.selectAnalyzator(id, languages, token);
+        Response<Project> response = projectCall.execute();
         return response;
     }
 }

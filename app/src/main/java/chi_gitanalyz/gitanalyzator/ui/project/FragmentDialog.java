@@ -28,7 +28,9 @@ public class FragmentDialog extends DialogFragment {
     private Spinner spinLang;
     private Button butOK;
 
-    private Integer idBr, idDev, idFilt,idLeng;
+    private Integer idBr, idDev, idFilt;
+    private Integer[] idLeng;
+    private String selectedLenguage;
 
     private ArrayList<String> branch;
     private ArrayList<String> dev;
@@ -37,15 +39,15 @@ public class FragmentDialog extends DialogFragment {
     private ArrayList<Integer> devID;
     private ArrayList<String> language;
 
-    private GetOnspinListner getOnspinListner;
+    private GetOnSpinListner getOnSpinListner;
     private HomeResponse projects;
 
-    public interface GetOnspinListner {
-        void getList(Integer dev, Integer branch, Integer filter,Integer language);
+    public interface GetOnSpinListner {
+        void getList(Integer dev, Integer branch, Integer filter, String language);
     }
 
-    public void getListner(GetOnspinListner getOnspinListner, HomeResponse projects) {
-        this.getOnspinListner = getOnspinListner;
+    public void getListner(GetOnSpinListner getOnSpinListner, HomeResponse projects) {
+        this.getOnSpinListner = getOnSpinListner;
         this.projects = projects;
     }
 
@@ -75,8 +77,6 @@ public class FragmentDialog extends DialogFragment {
         filter.add("Duplications");
         filter.add("Smells");
 
-        language.add("Ruby");
-        language.add("JS");
 
         for (int i = 0; i < projects.getBranches().size(); i++) {
             branch.add(projects.getBranches().get(i).getName());
@@ -86,6 +86,16 @@ public class FragmentDialog extends DialogFragment {
         for (int i = 0; i < projects.getDevelopers().size(); i++) {
             dev.add(projects.getDevelopers().get(i).getName());
             devID.add(projects.getDevelopers().get(i).getId());
+        }
+
+        idLeng = new Integer[projects.getLanguages().size()];
+        int tmp = 0;
+        for (int i = 0; i < projects.getLanguages().size(); i++) {
+            if (projects.getLanguages().get(i).getStatus().equals("analyzed")) {
+                language.add(String.valueOf(projects.getLanguages().get(i).getName()));
+                idLeng[tmp] = i;
+                tmp++;
+            }
         }
 
         ArrayAdapter<String> adapterBranch = new ArrayAdapter<String>(v.getContext(), android.R.layout.simple_dropdown_item_1line, branch);
@@ -150,7 +160,8 @@ public class FragmentDialog extends DialogFragment {
         spinLang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                idLeng = position;
+                //  idLeng = position;
+                selectedLenguage = projects.getLanguages().get(idLeng[position]).getName();
             }
 
             @Override
@@ -161,7 +172,7 @@ public class FragmentDialog extends DialogFragment {
         butOK = (Button) v.findViewById(R.id.butOK_dialog);
         v.findViewById(R.id.butOK_dialog).setOnClickListener((view) ->
                 {
-                    getOnspinListner.getList(idBr, idDev, idFilt,idLeng);
+                    getOnSpinListner.getList(idBr, idDev, idFilt, selectedLenguage);
                     dismiss();
                 }
         );

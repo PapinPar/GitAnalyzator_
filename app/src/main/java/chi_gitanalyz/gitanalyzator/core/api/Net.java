@@ -18,7 +18,7 @@ public interface Net extends Subjcet<NetSubscriber> {
     @IntDef({Sign_UP, Sign_IN, Sign_OUT, VALIDATE_TOKEN, UPD_PROFILE,
             PROJECT_LIST, PROJECT_ANALYZ
             , ALL_DEV, CURR_DEV,
-            CREATE_PROJECT, HOME_PROJECT, FILT_PROJECT, DEL_PROJECT, UPD_PROJECT})
+            CREATE_PROJECT, HOME_PROJECT, FILT_PROJECT, DEL_PROJECT, UPD_PROJECT,SELECT_ANALYZATOR})
     @interface NetEvent {
     }
 
@@ -39,6 +39,7 @@ public interface Net extends Subjcet<NetSubscriber> {
     int FILT_PROJECT = 202;
     int DEL_PROJECT = 203;
     int UPD_PROJECT = 204;
+    int SELECT_ANALYZATOR = 205;
 
     //*************************************** AUTH ***************************************
     void signIN(@NonNull InRequest user);
@@ -61,6 +62,8 @@ public interface Net extends Subjcet<NetSubscriber> {
     void deleteProject(@NonNull String id, @NonNull String token);
 
     void updateProject(@NonNull String id, @NonNull CreateProjectRequest projectsID, @NonNull String token);
+
+    void selectAnalyzator(@NonNull Integer id, String languages, @NonNull String token);
 
     //*************************************** DEVELOPERS ***************************************
     void getAllDev(@NonNull String token);

@@ -1,5 +1,6 @@
 package chi_gitanalyz.gitanalyzator.retrofit;
 
+import chi_gitanalyz.gitanalyzator.retrofit.model.data.Project;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.CurrentDevResponse;
 import chi_gitanalyz.gitanalyzator.retrofit.model.response.DevelopersResponse;
 import chi_gitanalyz.gitanalyzator.retrofit.model.request.CreateProjectRequest;
@@ -14,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -71,4 +73,6 @@ public interface MyApi {
     @PUT("projects/{id}")
     Call<CreateProjectRequest> updateProject(@Path("id") String id, @Body CreateProjectRequest projectsID, @Query("token") String token);
 
+    @PATCH("projects/{id}/select_analyzers")
+    Call<Project> selectAnalyzator(@Path("id") Integer id,@Query("languages") String languages,@Query("token") String token);
 }

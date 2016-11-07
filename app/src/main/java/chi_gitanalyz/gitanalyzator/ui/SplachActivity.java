@@ -39,19 +39,8 @@ public class SplachActivity extends BaseActivity {
     }
 
     private void firstLaunsh() {
-      //  sPref = getSharedPreferences("LAUNSH", MODE_PRIVATE);
-      //  SharedPreferences.Editor ed = sPref.edit();
-//
-      //  value = sPref.getInt("value", 0);
-      //  ed.putInt("value", 1);
-      //  if (value == 0) {
-      //      ed.putInt("value", 1);
-      //      ed.commit();
-      //  }
-      //  if (value == 1) {
-            Log.d("PAPIN_TAG","Servise started");
-            startService(new Intent(this, MyService.class));
-      //  }
+        Log.d("PAPIN_TAG", "Servise started");
+        startService(new Intent(this, MyService.class));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package chi_gitanalyz.gitanalyzator.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class CreateProjectActivity extends BaseActivity {
     private String token;
     private String sName;
     private String sSsh;
+    private SharedPreferences sPref;
 
 
     @Override
@@ -38,6 +40,8 @@ public class CreateProjectActivity extends BaseActivity {
         name = (MaterialEditText) findViewById(R.id.project_name);
         SSH = (MaterialEditText) findViewById(R.id.projet_SSH);
 
+        sPref = getSharedPreferences("Names", MODE_PRIVATE);
+
         findViewById(R.id.butCreate).setOnClickListener((view) ->
                 {
                     sName = name.getText().toString();
@@ -50,9 +54,13 @@ public class CreateProjectActivity extends BaseActivity {
                     project.setName(sName);
                     create.setUser(project);
 
-                    if (isNetworkConnected())
+                    if (isNetworkConnected()) {
                         app.getNet().createProject(create, token);
-                    else
+                        SharedPreferences.Editor ed = sPref.edit();
+                        ed.clear();
+                        ed.putString("Project_name", sName);
+                        ed.commit();
+                    } else
                         Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();
                 }
         );
@@ -72,7 +80,7 @@ public class CreateProjectActivity extends BaseActivity {
     public void onNetRequestFail(@Net.NetEvent int evetId, Object NetObjects) {
         switch (evetId) {
             case Net.CREATE_PROJECT:
-                String resultStr = NetObjects.toString().substring(NetObjects.toString().indexOf('[') + 2, NetObjects.toString().indexOf(']')-1);
+                String resultStr = NetObjects.toString().substring(NetObjects.toString().indexOf('[') + 2, NetObjects.toString().indexOf(']') - 1);
                 Toast.makeText(this, resultStr, Toast.LENGTH_SHORT).show();
                 break;
         }
