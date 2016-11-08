@@ -40,7 +40,7 @@ public class CreateProjectActivity extends BaseActivity {
         name = (MaterialEditText) findViewById(R.id.project_name);
         SSH = (MaterialEditText) findViewById(R.id.projet_SSH);
 
-        sPref = getSharedPreferences("Names", MODE_PRIVATE);
+        sPref = getSharedPreferences("OwnerID", MODE_PRIVATE);
 
         findViewById(R.id.butCreate).setOnClickListener((view) ->
                 {
@@ -58,7 +58,7 @@ public class CreateProjectActivity extends BaseActivity {
                         app.getNet().createProject(create, token);
                         SharedPreferences.Editor ed = sPref.edit();
                         ed.clear();
-                        ed.putString("Project_name", sName);
+                        ed.putString("managerID", managerId);
                         ed.commit();
                     } else
                         Toast.makeText(this, "Chech our internet connection", Toast.LENGTH_SHORT).show();

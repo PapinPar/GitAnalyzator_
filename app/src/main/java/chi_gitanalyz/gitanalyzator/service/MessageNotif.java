@@ -15,6 +15,9 @@ public class MessageNotif {
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("user_id")
+    @Expose
+    private String id;
     @SerializedName("project_name")
     @Expose
     private String project_name;
@@ -41,5 +44,13 @@ public class MessageNotif {
 
     public void setProject_name(String project_name) {
         this.project_name = project_name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

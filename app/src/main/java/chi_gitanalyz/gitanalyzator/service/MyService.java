@@ -39,7 +39,7 @@ public class MyService extends Service {
     private String channelName, eventName, key;
     private PusherOptions options;
     private SharedPreferences sPref;
-    private String projectName;
+    private String ownerID;
 
     @Nullable
     @Override
@@ -81,8 +81,8 @@ public class MyService extends Service {
         channel.bind(eventName, new SubscriptionEventListener() {
             @Override
             public void onEvent(String channelName, String eventName, final String data) {
-                sPref = getSharedPreferences("Names", MODE_PRIVATE);
-                projectName = sPref.getString("Project_name", "0");
+                sPref = getSharedPreferences("OwnerID", MODE_PRIVATE);
+                ownerID = sPref.getString("managerID", "-1");
 
                 Thread t = new Thread(new Runnable() {
                     public void run() {
@@ -90,9 +90,9 @@ public class MyService extends Service {
                         message = gson.fromJson(data, MessageNotif.class);
                         Log.d("asd", "" + message.getStatus());
                         if (message.getStatus().equals("selecting_analyzers")) {
-                            if (projectName.equals(message.getProject_name()))
+                            if (ownerID.equals(message.getId()))
                                 startActivity(message.getProject_id());
-                        } else
+                        } else if (ownerID.equals(message.getId()))
                             sendNotif();
                     }
                 });

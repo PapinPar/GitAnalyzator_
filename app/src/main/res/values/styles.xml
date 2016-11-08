@@ -13,7 +13,7 @@
     </style>
 
     <style name="BackGroundColor" parent="android:Widget.ListView.White">
-    <item name="android:background">@drawable/background_color</item>
+        <item name="android:background">@drawable/background_color</item>
     </style>
 
     <style name="MyTextViewStyle" parent="android:Widget.TextView">
@@ -35,6 +35,11 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
+
+        parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/White</item>
+
     </style>
+
 
 </resources>
